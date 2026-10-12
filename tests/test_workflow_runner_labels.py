@@ -122,6 +122,10 @@ def test_e2e_timeout_is_forty_five_minutes() -> None:
     assert _tests_job("e2e-frontend").get("timeout-minutes") == 45
 
 
+def test_backend_timeout_is_twenty_minutes() -> None:
+    assert _tests_job("test-backend").get("timeout-minutes") == 20
+
+
 def test_frontend_unit_tests_run_three_workers() -> None:
     step = _step(
         _tests_job("test-frontend"),
