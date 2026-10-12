@@ -1,0 +1,10 @@
+{
+  "must_survive": [
+    "GHSA-93gc-8v9j-9v9v",
+    "PR #652",
+    "uv lock -P starlette",
+    "pyproject.toml:10",
+    "does this CVE's severity"
+  ],
+  "citation": "PROMPT_AUDIT.md PA-05: a dependency_sweep handover whose load-bearing content is a CVE identifier, the exact lockfile command tried, and an unresolved policy question — losing the CVE id or the command forces the next team to redo the audit from scratch."
+}

@@ -1,0 +1,10 @@
+{
+  "must_survive": [
+    "alan/routes/workspaces.py",
+    "alan/workspace.py",
+    "do not touch `alan/routes/_deps.py`'s dependency wiring",
+    "should the import endpoint require the archive's `schema_version` to exactly match",
+    "dispatch `export-workspace-endpoint` to implementation_plan immediately"
+  ],
+  "citation": "PROMPT_AUDIT.md PA-05: an architecture/decomposer handover whose forbidden-actions list and split rationale are the whole point of the artifact — dropping the exact file-path boundaries or the concrete dispatch instruction defeats the split decision entirely."
+}

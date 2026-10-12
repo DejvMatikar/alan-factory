@@ -1,0 +1,22 @@
+schema_version: "1.15"
+handover_id: handover_fixture-task_v1
+handover_chain_id: chain-nonactionable-001
+handover_type: forward
+task_id: fixture-task
+from_team: verification
+from_invocation_id: inv_001
+to_team_suggestions:
+  - implementation_fix
+iteration: 2
+timestamp_utc: "2026-06-09T08:00:00+00:00"
+decisions:
+  - id: dec-001
+    statement: "Request the rename before approving."
+    rationale: "Naming mismatch against the vendored client types would break downstream imports."
+    confidence: 0.7
+    reversibility: high
+full_synthesis: |
+  VERDICT: REQUEST_CHANGES
+  DIFF_FINDINGS_CRITICAL: 0
+  Please rename the exported symbol `fetchUserV2` back to `fetchUser` to
+  match the vendored `@acme/api-client` type definitions this PR depends on.

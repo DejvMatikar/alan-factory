@@ -1,0 +1,15 @@
+## Critical findings
+1. alan/digest.py:61 — inbox item `title` is interpolated into the HTML
+   digest body with no escaping; a title containing `<script>` executes in
+   the recipient's mail client when it renders the HTML body.
+
+## High findings
+None.
+
+## Medium findings
+None.
+
+## Low findings
+None.
+
+DIFF_FINDINGS_CRITICAL: 1

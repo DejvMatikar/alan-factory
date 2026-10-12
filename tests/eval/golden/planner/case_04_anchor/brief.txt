@@ -1,0 +1,3 @@
+Add a GET /api/version endpoint that returns the running build's git SHA and
+build timestamp as JSON, for release-verification tooling. It must not
+require authentication and must not touch the database or queue.

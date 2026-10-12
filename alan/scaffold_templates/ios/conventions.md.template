@@ -1,0 +1,62 @@
+# {project_title} — Conventions
+
+This repository was onboarded onto alan with the **ios** stack preset: Swift
+6.2 language mode, SwiftUI-first with a closed `enum Route`, The Composable
+Architecture (TCA) v1.25.x + swift-dependencies, GRDB v7.x, `URLSession` with
+hand-written `Codable`, Swift Testing for units and XCTest for UI flows,
+SPM-only dependency management via [Tuist](https://tuist.io/).
+
+## Module map
+
+- `Project.swift` — the Tuist manifest, the only hand-edited project source.
+- `Tuist/Package.swift` — external Swift package dependencies.
+- `App/Sources/{{AppMain,AppFeature,AppRoute}}.swift`
+- `Modules/Domain/` — value types only; imports no framework.
+- `Modules/Core/{{Persistence,Networking,DesignSystem,Dependencies,UIKitBridge}}/`
+- `Modules/Features/<Feature>/{{Sources,Tests}}/`
+- `UITests/`
+- `SnapshotTests/` + `__Snapshots__/`
+- `.swiftlint.yml`, `.swift-format`, `.periphery.yml`
+- `scripts/gate.sh`
+
+## Dependency direction
+
+Compile-enforced by SPM: `Features -> Core -> Domain`. Nothing imports
+`Features` except `App`. `Domain` imports nothing. A feature importing a
+sibling feature is a build error, not a review comment.
+
+## Placement rules
+
+- Every `UIViewRepresentable`/`UIViewControllerRepresentable` lives in
+  `Core/UIKitBridge`.
+- Every navigable destination is a case in `AppRoute`.
+
+## Persistence and dependency injection
+
+- GRDB `DatabaseQueue`/`Pool`, migrations and DAOs live in `Core/Persistence`.
+- `DependencyKey` with `liveValue`/`testValue`/`previewValue` lives in
+  `Core/Dependencies`.
+
+## Coverage
+
+xccov line-coverage floor 0.95. This is line coverage, not branch coverage —
+Swift emits no branch-coverage intrinsics.
+
+## Gates (CI, `.github/workflows/ci.yml`)
+
+The `ios-ci` check runs on every pull request and must pass before merge. It
+runs the repository's single headless entrypoint, `scripts/gate.sh`.
+
+## Review checklist
+
+1. Did the repository's gate script pass? Red means stop reading.
+2. Grep the diff for `@unchecked Sendable` and bare `try?` — the two known
+   agent-authorship failure modes that compile clean and pass every gate.
+3. Is business logic in a `View` file? Views render, reducers decide.
+4. Did a new screen add a case to `AppRoute`?
+5. Does every new dependency have a `testValue`?
+
+## Dependencies
+
+Dependabot (`.github/dependabot.yml`) opens weekly update pull requests for
+both Swift packages (scoped to `Tuist/Package.swift`) and GitHub Actions.

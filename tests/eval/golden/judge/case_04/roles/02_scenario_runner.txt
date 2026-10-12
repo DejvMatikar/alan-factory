@@ -1,0 +1,7 @@
+SCENARIOS_MISSING
+
+## Diagnostic notes
+The user prompt carried no `## TEST SCENARIOS` block — the inbound
+handover's `test_scenarios` list was empty and the current task has no
+`dod_clauses`. Neither SCENARIOS_COVERED_BY_DOD nor SCENARIOS_WAIVED
+applies.

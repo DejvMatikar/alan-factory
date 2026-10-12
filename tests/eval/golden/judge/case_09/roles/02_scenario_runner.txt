@@ -1,0 +1,9 @@
+SCENARIOS_MISSING
+
+## Diagnostic notes
+The user prompt carried no `## TEST SCENARIOS` block, and the current task
+has no `dod_clauses`. Neither SCENARIOS_COVERED_BY_DOD nor SCENARIOS_WAIVED
+applies. Note for the judge: this is a small, mechanical config-plumbing
+change with zero CRITICAL findings — do not let that tempt you to treat the
+missing-scenarios gate as a formality. It is a hard gate, not a judgment
+call.

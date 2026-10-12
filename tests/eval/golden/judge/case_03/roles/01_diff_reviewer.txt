@@ -1,0 +1,13 @@
+## Critical findings
+None.
+
+## High findings
+None.
+
+## Medium findings
+None.
+
+## Low findings
+None.
+
+DIFF_FINDINGS_CRITICAL: 0

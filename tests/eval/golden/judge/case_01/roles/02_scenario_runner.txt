@@ -1,0 +1,5 @@
+## Scenario results
+1. ping-returns-ok — PASS (tests/test_routes_infra.py::test_ping_returns_ok_without_auth)
+
+## Diagnostic notes
+Single scenario, subprocess-grounded, exit code 0.

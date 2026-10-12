@@ -1,0 +1,3 @@
+{
+  "result_text": "## Context\nWe should probably have some way to check the version of the running thing.\n\n## Recommended approach\nJust add an endpoint somewhere that returns the version. There's probably an existing pattern for this kind of thing we can copy.\n\n## Implementation steps\n1. Add the endpoint.\n2. Wire it up.\n3. Make sure it returns something reasonable.\n\n## Risks and mitigations\nThere could be some risks with this change but nothing major comes to mind.\n\n## Test plan\nWrite some tests to make sure it works.\n\n## Open questions\nNot sure, will figure it out as we go.\n"
+}

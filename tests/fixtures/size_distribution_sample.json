@@ -1,0 +1,1980 @@
+[
+  {
+    "task_id": "sample-001",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-002",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "tests/test_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-003",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "tests/test_label_sync.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-004",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/snooze_rules.py",
+      "alan/routes/tag_registry.py",
+      "alan/snooze_rules.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/artifact_index.md",
+      "docs/architecture/digest_mailer.md",
+      "docs/architecture/snooze_rules.md",
+      "docs/architecture/tag_registry.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_snooze_rules.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-005",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-006",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/quota_ledger.py",
+      "alan/routes/snooze_rules.py",
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/snooze_rules.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/quota_ledger.md",
+      "docs/architecture/snooze_rules.md",
+      "docs/architecture/tag_registry.md",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_snooze_rules.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-007",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-008",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-009",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/intake_router.md",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-010",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "tests/test_intake_router.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-011",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/label_sync.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "docs/architecture/label_sync.md",
+      "tests/test_digest_mailer.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-012",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "docs/architecture/digest_mailer.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-013",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "tests/test_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-014",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-015",
+    "files_to_edit": [
+      "alan/tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-016",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-017",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-018",
+    "files_to_edit": [
+      "alan/intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-019",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/label_sync.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "docs/architecture/label_sync.md",
+      "tests/test_digest_mailer.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-020",
+    "files_to_edit": [
+      "alan/digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-021",
+    "files_to_edit": [
+      "alan/artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-022",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-023",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/tag_registry.py",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-024",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/quota_ledger.py",
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/quota_ledger.md",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-025",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-026",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/intake_router.py",
+      "alan/label_sync.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "docs/architecture/intake_router.md",
+      "docs/architecture/label_sync.md",
+      "tests/test_intake_router.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-027",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "alan/routes/label_sync.py",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "tests/test_label_sync.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-028",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "docs/architecture/digest_mailer.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-029",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-030",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/snooze_rules.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/snooze_rules.md",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_snooze_rules.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-031",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-032",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/quota_ledger.md",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-033",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/label_sync.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/label_sync.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/intake_router.md",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_label_sync.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_label_sync.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-034",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "tests/test_intake_router.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-035",
+    "files_to_edit": [
+      "alan/label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-036",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/routes/digest_mailer.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-037",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-038",
+    "files_to_edit": [
+      "alan/snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-039",
+    "files_to_edit": [
+      "alan/tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-040",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-041",
+    "files_to_edit": [
+      "alan/quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-042",
+    "files_to_edit": [
+      "alan/intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-043",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "alan/routes/label_sync.py",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "tests/test_label_sync.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-044",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/routes/digest_mailer.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-045",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "tests/test_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-046",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-047",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-048",
+    "files_to_edit": [
+      "alan/routes/webhook_relay.py",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-049",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-050",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "tests/test_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-051",
+    "files_to_edit": [
+      "alan/label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-052",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-053",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "docs/architecture/snooze_rules.md",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-054",
+    "files_to_edit": [
+      "alan/snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-055",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-056",
+    "files_to_edit": [
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-057",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "tests/test_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-058",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "tests/test_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-059",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "alan/routes/label_sync.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-060",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "docs/architecture/digest_mailer.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-061",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-062",
+    "files_to_edit": [
+      "alan/snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-063",
+    "files_to_edit": [
+      "alan/tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-064",
+    "files_to_edit": [
+      "alan/webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-065",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-066",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "tests/test_intake_router.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-067",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "alan/routes/label_sync.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-068",
+    "files_to_edit": [
+      "alan/digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-069",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "tests/test_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-070",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-071",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-072",
+    "files_to_edit": [
+      "alan/webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-073",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-074",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "tests/test_intake_router.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-075",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "tests/test_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-076",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-077",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-078",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-079",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-080",
+    "files_to_edit": [
+      "alan/webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-081",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-082",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "tests/test_intake_router.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-083",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "tests/test_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-084",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/routes/digest_mailer.py",
+      "tests/test_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-085",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-086",
+    "files_to_edit": [
+      "alan/snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-087",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-088",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-089",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-090",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "tests/test_intake_router.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-091",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/label_sync.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "docs/architecture/digest_mailer.md",
+      "docs/architecture/label_sync.md",
+      "tests/test_digest_mailer.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-092",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-093",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "tests/test_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-094",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/routes/tag_registry.py",
+      "alan/snooze_rules.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "docs/architecture/snooze_rules.md",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_snooze_rules.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-095",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-096",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/intake_router.py",
+      "alan/label_sync.py",
+      "alan/quota_ledger.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/label_sync.py",
+      "alan/routes/quota_ledger.py",
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/intake_router.md",
+      "docs/architecture/label_sync.md",
+      "docs/architecture/quota_ledger.md",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_digest_mailer.py",
+      "tests/test_intake_router.py",
+      "tests/test_label_sync.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_label_sync.py",
+      "tests/test_routes_quota_ledger.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-097",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-098",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/intake_router.py",
+      "alan/label_sync.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "docs/architecture/intake_router.md",
+      "docs/architecture/label_sync.md",
+      "tests/test_digest_mailer.py",
+      "tests/test_intake_router.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-099",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "tests/test_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-100",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "docs/architecture/digest_mailer.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-101",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-102",
+    "files_to_edit": [
+      "alan/snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-103",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-104",
+    "files_to_edit": [
+      "alan/routes/webhook_relay.py",
+      "alan/webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-105",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/intake_router.md",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-106",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/intake_router.py",
+      "alan/label_sync.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "docs/architecture/digest_mailer.md",
+      "docs/architecture/intake_router.md",
+      "docs/architecture/label_sync.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_intake_router.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-107",
+    "files_to_edit": [
+      "alan/label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-108",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "docs/architecture/digest_mailer.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-109",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-110",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "docs/architecture/snooze_rules.md",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-111",
+    "files_to_edit": [
+      "alan/tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-112",
+    "files_to_edit": [
+      "alan/routes/webhook_relay.py",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-113",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-114",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/label_sync.py",
+      "alan/routes/intake_router.py",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "docs/architecture/intake_router.md",
+      "tests/test_intake_router.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-115",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "tests/test_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-116",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-117",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/quota_ledger.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/quota_ledger.py",
+      "alan/routes/snooze_rules.py",
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/snooze_rules.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/artifact_index.md",
+      "docs/architecture/snooze_rules.md",
+      "docs/architecture/tag_registry.md",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_artifact_index.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_quota_ledger.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_snooze_rules.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-118",
+    "files_to_edit": [
+      "alan/snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-119",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-120",
+    "files_to_edit": [
+      "alan/webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-121",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/label_sync.py",
+      "alan/quota_ledger.py",
+      "alan/routes/intake_router.py",
+      "alan/routes/label_sync.py",
+      "alan/routes/quota_ledger.py",
+      "alan/web/e2e/intake-router.spec.ts",
+      "alan/web/e2e/quota-ledger.spec.ts",
+      "alan/web/src/components/IntakeRouterPanel.test.tsx",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.test.tsx",
+      "alan/web/src/components/QuotaLedgerPanel.tsx",
+      "docs/architecture/intake_router.md",
+      "docs/architecture/quota_ledger.md",
+      "tests/test_intake_router.py",
+      "tests/test_label_sync.py",
+      "tests/test_quota_ledger.py",
+      "tests/test_routes_intake_router.py",
+      "tests/test_routes_label_sync.py",
+      "tests/test_routes_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-122",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "alan/web/src/components/IntakeRouterPanel.tsx",
+      "tests/test_intake_router.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-123",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/label_sync.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "docs/architecture/label_sync.md",
+      "tests/test_digest_mailer.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-124",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/snooze_rules.py",
+      "alan/routes/tag_registry.py",
+      "alan/snooze_rules.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/artifact_index.md",
+      "docs/architecture/digest_mailer.md",
+      "docs/architecture/snooze_rules.md",
+      "docs/architecture/tag_registry.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_snooze_rules.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-125",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "docs/architecture/snooze_rules.md",
+      "tests/test_artifact_index.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-126",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-127",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-128",
+    "files_to_edit": [
+      "alan/webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-129",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "tests/test_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-130",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "tests/test_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-131",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "tests/test_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-132",
+    "files_to_edit": [
+      "alan/digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-133",
+    "files_to_edit": [
+      "alan/artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-134",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  },
+  {
+    "task_id": "sample-135",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_tag_registry.py"
+    ]
+  },
+  {
+    "task_id": "sample-136",
+    "files_to_edit": [
+      "alan/routes/webhook_relay.py",
+      "alan/webhook_relay.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-137",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "tests/test_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-138",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "tests/test_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-139",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/label_sync.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/label_sync.py",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/e2e/label-sync.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "alan/web/src/components/LabelSyncPanel.test.tsx",
+      "alan/web/src/components/LabelSyncPanel.tsx",
+      "docs/architecture/digest_mailer.md",
+      "docs/architecture/label_sync.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_label_sync.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-140",
+    "files_to_edit": [
+      "alan/digest_mailer.py",
+      "alan/routes/digest_mailer.py",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_digest_mailer.py"
+    ]
+  },
+  {
+    "task_id": "sample-141",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "tests/test_artifact_index.py"
+    ]
+  },
+  {
+    "task_id": "sample-142",
+    "files_to_edit": [
+      "alan/routes/snooze_rules.py",
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/snooze_rules.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/snooze-rules.spec.ts",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/SnoozeRulesPanel.test.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/snooze_rules.md",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_snooze_rules.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-143",
+    "files_to_edit": [
+      "alan/routes/tag_registry.py",
+      "alan/routes/webhook_relay.py",
+      "alan/tag_registry.py",
+      "alan/web/e2e/tag-registry.spec.ts",
+      "alan/web/src/components/TagRegistryPanel.test.tsx",
+      "alan/web/src/components/TagRegistryPanel.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/tag_registry.md",
+      "tests/test_routes_tag_registry.py",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_tag_registry.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-144",
+    "files_to_edit": [
+      "alan/routes/webhook_relay.py",
+      "alan/web/e2e/webhook-relay.spec.ts",
+      "alan/web/src/components/WebhookRelayPanel.test.tsx",
+      "alan/web/src/components/WebhookRelayPanel.tsx",
+      "alan/webhook_relay.py",
+      "docs/architecture/webhook_relay.md",
+      "tests/test_routes_webhook_relay.py",
+      "tests/test_webhook_relay.py"
+    ]
+  },
+  {
+    "task_id": "sample-145",
+    "files_to_edit": [
+      "alan/quota_ledger.py",
+      "tests/test_quota_ledger.py"
+    ]
+  },
+  {
+    "task_id": "sample-146",
+    "files_to_edit": [
+      "alan/intake_router.py",
+      "alan/routes/intake_router.py",
+      "tests/test_intake_router.py",
+      "tests/test_routes_intake_router.py"
+    ]
+  },
+  {
+    "task_id": "sample-147",
+    "files_to_edit": [
+      "alan/label_sync.py",
+      "tests/test_label_sync.py"
+    ]
+  },
+  {
+    "task_id": "sample-148",
+    "files_to_edit": [
+      "alan/artifact_index.py",
+      "alan/digest_mailer.py",
+      "alan/routes/artifact_index.py",
+      "alan/routes/digest_mailer.py",
+      "alan/routes/snooze_rules.py",
+      "alan/snooze_rules.py",
+      "alan/web/e2e/artifact-index.spec.ts",
+      "alan/web/e2e/digest-mailer.spec.ts",
+      "alan/web/src/components/ArtifactIndexPanel.test.tsx",
+      "alan/web/src/components/ArtifactIndexPanel.tsx",
+      "alan/web/src/components/DigestMailerPanel.test.tsx",
+      "alan/web/src/components/DigestMailerPanel.tsx",
+      "alan/web/src/components/SnoozeRulesPanel.tsx",
+      "docs/architecture/artifact_index.md",
+      "docs/architecture/digest_mailer.md",
+      "tests/test_artifact_index.py",
+      "tests/test_digest_mailer.py",
+      "tests/test_routes_artifact_index.py",
+      "tests/test_routes_digest_mailer.py",
+      "tests/test_routes_snooze_rules.py",
+      "tests/test_snooze_rules.py"
+    ]
+  }
+]

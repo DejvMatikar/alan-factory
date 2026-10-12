@@ -1,0 +1,6 @@
+{
+  "situation": "scope_partition_approve",
+  "intended_verdict": "APPROVE",
+  "must_not_flip": true,
+  "citation": "PROMPT_AUDIT.md PA-10(b): 'the raw-count backstop depends entirely on the judge echoing the diff_reviewer's count ... Correlated judge failures silently defeat the post-#508 safeguard ... defense-in-depth hole'; PA-03 describes the same raw-vs-effective-count conjunction reintroducing the #508 sticky wedge. This is the known-bad anchor for this suite and covers the planned PA3.1 verdict-grammar hardening (docs/ROADMAP.md PA3.1, PA-03/PA-09/PA-10)."
+}

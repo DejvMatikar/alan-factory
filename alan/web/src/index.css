@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+@theme {
+  --spacing-tap-target: 44px;
+  --color-surface: #0f172a;
+  --color-surface-elevated: #1e293b;
+  --color-border: #334155;
+  --color-text-primary: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-btn-create: #10b981;
+  --color-btn-action: #0ea5e9;
+  --color-btn-destroy: #ef4444;
+  --color-btn-reset: #f59e0b;
+  --color-status-active-tint: oklch(62.3% 0.214 259.815);
+  --color-status-active-fg: oklch(80.9% 0.105 251.813);
+  --color-status-attention-tint: oklch(76.9% 0.188 70.08);
+  --color-status-attention-fg: oklch(87.9% 0.169 91.605);
+  --color-status-success-tint: oklch(72.3% 0.219 149.579);
+  --color-status-success-fg: oklch(87.1% 0.15 154.449);
+  --color-status-neutral-tint: oklch(55.2% 0.016 285.938);
+  --color-status-neutral-fg: oklch(87.1% 0.006 286.286);
+  --color-status-danger-tint: oklch(63.7% 0.237 25.331);
+  --color-status-danger-fg: oklch(80.8% 0.114 19.571);
+  --color-status-paused-tint: oklch(62.7% 0.265 303.9);
+  --color-status-paused-fg: oklch(82.7% 0.119 306.383);
+  --color-status-warning-tint: oklch(70.5% 0.213 47.604);
+  --color-status-warning-fg: oklch(83.7% 0.128 66.29);
+  --color-status-moderate-tint: oklch(79.5% 0.184 86.047);
+  --color-status-moderate-fg: oklch(90.5% 0.182 98.111);
+  --color-banner-error-tint: oklch(63.7% 0.237 25.331);
+  --color-banner-error-fg: oklch(80.8% 0.114 19.571);
+  --color-scope-repo-tint: oklch(70.4% 0.14 182.503);
+  --color-scope-repo-fg: oklch(85.5% 0.138 181.07);
+}
+
+.react-flow {
+  --xy-background-color-default: var(--color-surface);
+  --xy-background-pattern-color-default: var(--color-border);
+  --xy-controls-button-background-color-default: var(--color-surface-elevated);
+  --xy-controls-button-background-color-hover-default: var(--color-border);
+  --xy-controls-button-color-default: var(--color-text-primary);
+  --xy-controls-button-border-color-default: var(--color-border);
+  --xy-edge-stroke-default: var(--color-text-muted);
+  --xy-edge-stroke-selected-default: var(--color-text-primary);
+  --xy-minimap-background-color-default: var(--color-surface-elevated);
+}
+
+.react-flow__node-step:hover,
+.react-flow__node-step:focus-within,
+.react-flow__node-llm:hover,
+.react-flow__node-llm:focus-within {
+  z-index: 1000 !important;
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.alan.update</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__ALAN_REPO_DIR__/deploy/update_runner.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__ALAN_REPO_DIR__</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>__ALAN_REPO_DIR__/.venv/bin:__ALAN_HOME__/.local/bin:/opt/homebrew/opt/node@22/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <key>StartInterval</key>
+    <integer>900</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>__ALAN_HOME__/.alan/logs/alan.update.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__ALAN_HOME__/.alan/logs/alan.update.error.log</string>
+</dict>
+</plist>

@@ -1,0 +1,51 @@
+repo:
+  owner: example-org
+  repo: my-web-app
+
+code_quality: null
+
+roles:
+  implementer:
+    model: sonnet
+    effort: xhigh
+  judge:
+    model: opus
+
+gate_commands:
+  - [npm, test]
+  - [npm, run, lint]
+  - [npm, run, build]
+
+warmup_commands:
+  - [npm, ci]
+
+base_tools:
+  - Read
+  - Grep
+  - Glob
+
+team_tools:
+  implementation:
+    - Edit
+    - Write
+
+transition_graph:
+  implementation:
+    - code_review
+  implementation_fix:
+    - code_review
+  code_review:
+    - implementation_fix
+    - shipped
+  shipped: []
+
+flow_policy:
+  verifier_teams:
+    - code_review
+  merge_teams:
+    - shipped
+  terminal_teams:
+    - shipped
+  internal_only_teams: []
+  restricted_predecessors: {}
+  revisit_cap: 3

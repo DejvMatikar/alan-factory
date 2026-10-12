@@ -1,0 +1,12 @@
+owner: DejvMatikar
+repo: alan
+posture: autonomous
+authoritative_checks: []
+code_quality:
+  organization: example-org
+  project_key: example-owner_project
+main_ci_workflow: tests.yml
+deploy_workflow: ci-deploy.yml
+dependency_sweep: true
+triage_sweep: true
+verifier_login: alan-verifier

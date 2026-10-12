@@ -1,0 +1,471 @@
+#!/usr/bin/env bash
+# Stub for the `claude` CLI used in E2E tests. Reads stdin (the user prompt
+# the FastAPI server sent) and emits a deterministic JSON envelope mimicking
+# what `claude -p` produces. No network, no LLM.
+#
+# Routes on the role-specific system prompt passed via --append-system-prompt
+# (or, for chat-driven workspace creation, on the per-session --session-id /
+# --resume argv) so each team / flow gets a recognisable stubbed response.
+# Supports both `--output-format json` (single line) and `--output-format
+# stream-json` (newline-delimited events) depending on caller.
+
+set -euo pipefail
+
+# E2E observability: append an invocation line to $ALAN_E2E_STUB_MARKER FIRST so
+# alan/web/e2e/fixtures/test-base.ts can assert (in afterEach) that this stub
+# fired during the test. Must precede the delay / cat / args-parsing so an
+# early SIGTERM (e.g. from the Stop/Resume spec) still leaves a trace.
+if [[ -n "${ALAN_E2E_STUB_MARKER:-}" ]]; then
+  printf '%s\n' "$(date +%s) stub-fired" >> "$ALAN_E2E_STUB_MARKER" 2>/dev/null || true
+fi
+
+if [[ "${ALAN_STUB_DELAY_MS:-0}" -gt 0 ]]; then
+  python3 -c "import time; time.sleep(${ALAN_STUB_DELAY_MS}/1000)"
+fi
+
+INPUT="$(cat)"
+
+SYSTEM_PROMPT=""
+OUTPUT_FORMAT="json"
+SESSION_ID=""
+RESUME_ID=""
+DENY_RULES=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --disallowedTools)
+      shift
+      while [[ $# -gt 0 && "$1" != --* ]]; do
+        DENY_RULES+=("$1")
+        shift
+      done
+      continue
+      ;;
+    --append-system-prompt)
+      shift
+      SYSTEM_PROMPT="${1:-}"
+      ;;
+    --output-format)
+      shift
+      OUTPUT_FORMAT="${1:-json}"
+      ;;
+    --session-id)
+      shift
+      SESSION_ID="${1:-}"
+      ;;
+    --resume)
+      shift
+      RESUME_ID="${1:-}"
+      ;;
+  esac
+  shift || true
+done
+
+if [[ "$INPUT" == READ_PROBE:* ]]; then
+  python3 - "$OUTPUT_FORMAT" "${INPUT#READ_PROBE:}" ${DENY_RULES[@]+"${DENY_RULES[@]}"} <<'PY'
+import json
+import sys
+
+output_format, probe, *rules = sys.argv[1:]
+target = probe.strip()
+
+
+def covers(rule, path):
+    if not (rule.startswith("Read(//") and rule.endswith(")")):
+        return False
+    pattern = rule[len("Read(/"):-1]
+    if pattern.endswith("/**"):
+        root = pattern[:-3].rstrip("/")
+        return path == root or path.startswith(root + "/")
+    return path == pattern
+
+
+verdict = "ALLOWED"
+for rule in rules:
+    if rule == "*" or covers(rule, target):
+        verdict = "DENIED: " + rule
+        break
+usage = {"input_tokens": 0, "output_tokens": 0}
+if output_format == "stream-json":
+    print(json.dumps({"type": "system", "subtype": "init", "session_id": "stub"}))
+    print(json.dumps({"type": "result", "subtype": "success", "result": verdict, "is_error": False, "usage": usage}))
+else:
+    print(json.dumps({"result": verdict, "is_error": False}))
+PY
+  exit 0
+fi
+
+if [[ -n "${ALAN_STUB_RENDEZVOUS_FILE:-}" \
+      && -f "${ALAN_STUB_RENDEZVOUS_FILE}" \
+      && "$SYSTEM_PROMPT" == *"research orchestrator"* ]]; then
+  RVN="${ALAN_STUB_RENDEZVOUS_N:-2}"
+  RVT_MS="${ALAN_STUB_RENDEZVOUS_TIMEOUT_MS:-15000}"
+  mkdir -p "$(dirname "$ALAN_STUB_RENDEZVOUS_FILE")" 2>/dev/null || true
+  printf '%s\n' "$$" >> "$ALAN_STUB_RENDEZVOUS_FILE"
+  python3 - "$ALAN_STUB_RENDEZVOUS_FILE" "$RVN" "$RVT_MS" <<'PY'
+import os, sys, time
+path, n, timeout_ms = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+deadline = time.monotonic() + timeout_ms / 1000.0
+while time.monotonic() < deadline:
+    try:
+        with open(path) as f:
+            lines = sum(1 for _ in f)
+    except OSError:
+        lines = 0
+    if lines >= n:
+        sys.exit(0)
+    time.sleep(0.02)
+sys.exit(1)
+PY
+fi
+
+TITLE_LINE="$(printf '%s' "$INPUT" | head -n 1 | sed 's/^Title: //')"
+
+# Scoped one-shot triggers: the trigger file's CONTENT is the scope — the
+# trigger only fires for the invocation whose first prompt line is
+# "Title: <content>" (every team-dispatch node prompt starts that way).
+# An empty file keeps the legacy fire-for-anyone semantics. Scoping is what
+# stops a leftover background job from a previous test (or from a failed
+# retry attempt) consuming another test's trigger — the top CI flake class.
+trigger_matches() {
+  local scope
+  [[ -f "$1" ]] || return 1
+  scope="$(cat "$1" 2>/dev/null || true)"
+  [[ -z "$scope" || "$scope" == "$TITLE_LINE" ]]
+}
+
+# Hang mode for the Stop/Resume E2E specs. Blocks on SIGTERM so the
+# dispatcher's ProcRegistry can interrupt the live subprocess
+# deterministically; the trap exits non-zero so the dispatcher's exception
+# handler routes through the user-pause branch instead of completing
+# successfully. Sits below the stdin read (unlike the one-shot triggers it
+# fires on EVERY matching invocation) so it can be title-scoped too.
+if [[ -n "${ALAN_E2E_STUB_HANG_FILE:-}" ]] && trigger_matches "${ALAN_E2E_STUB_HANG_FILE}"; then
+  trap 'exit 130' TERM INT
+  while true; do
+    sleep 0.1 &
+    wait $!
+  done
+fi
+
+# Usage-limit one-shot trigger: emits a usage-limit error and removes the trigger
+# file so the second (resumed) run goes through normally. Only fires when
+# ALAN_E2E_USAGE_LIMIT_RESET_IN_MINUTES is set, the trigger file exists, and
+# stream-json output is requested.
+if [[ -n "${ALAN_E2E_USAGE_LIMIT_RESET_IN_MINUTES:-}" \
+      && -n "${ALAN_E2E_USAGE_LIMIT_TRIGGER_FILE:-}" \
+      && "$OUTPUT_FORMAT" == "stream-json" ]] \
+      && trigger_matches "${ALAN_E2E_USAGE_LIMIT_TRIGGER_FILE}"; then
+  rm -f "${ALAN_E2E_USAGE_LIMIT_TRIGGER_FILE}"
+  N="${ALAN_E2E_USAGE_LIMIT_RESET_IN_MINUTES}"
+  printf '%s\n' '{"type":"system","subtype":"init","session_id":"stub"}'
+  printf '{"type":"result","subtype":"error_during_execution","result":"You'\''ve hit your limit \302\267 resets in %s minutes","is_error":true,"usage":{"input_tokens":0,"output_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}}\n' "$N"
+  exit 0
+fi
+
+# Server-error one-shot trigger: emits a 5xx server error and removes the
+# trigger file so the second (retried) run goes through normally. Only fires
+# when the trigger file exists and stream-json output is requested.
+if [[ -n "${ALAN_E2E_SERVER_ERROR_TRIGGER_FILE:-}" \
+      && "$OUTPUT_FORMAT" == "stream-json" ]] \
+      && trigger_matches "${ALAN_E2E_SERVER_ERROR_TRIGGER_FILE}"; then
+  rm -f "${ALAN_E2E_SERVER_ERROR_TRIGGER_FILE}"
+  printf '%s\n' '{"type":"system","subtype":"init","session_id":"stub"}'
+  printf '%s\n' '{"type":"result","subtype":"error_during_execution","result":"overloaded","is_error":true,"usage":{"input_tokens":0,"output_tokens":0}}'
+  exit 0
+fi
+
+DISPATCH_PAYLOAD='{"agents":[{"role":"alpha_analyst","prompt":"SCOPE: Investigate alpha narrowly.\nCOVERAGE: Other agents: beta_analyst covers beta. Do NOT duplicate.\nSUCCESS: 3 alpha findings with file refs.\nCONTEXT: Stub prior context."},{"role":"beta_analyst","prompt":"SCOPE: Investigate beta narrowly.\nCOVERAGE: Other agents: alpha_analyst covers alpha. Do NOT duplicate.\nSUCCESS: 3 beta findings with file refs.\nCONTEXT: Stub prior context."}]}'
+
+PLAN_DECISIONS_BLOCK='
+
+```yaml decisions.yaml
+decisions:
+  - id: d1
+    statement: "use option A"
+    rationale: "cheapest path forward"
+    confidence: 0.85
+    reversibility: medium
+files_to_edit:
+  - tests/test_e2e_placeholder.py
+test_scenarios:
+  - id: s1
+    description: "stub scenario for e2e coverage"
+    given: "workspace cwd exists"
+    when: "pwd"
+    then: "prints the working directory"
+```'
+
+# Workspace-chat (dispatch-advisor) flow: branch on the unique substring of
+# WORKSPACE_CHAT_SYSTEM_PROMPT. Session storage is under the workspace dir
+# (cwd at call time), so the turn marker also lives there. Emits the
+# <dispatch-readiness state="ready"/> tag on the first turn and a ready
+# DispatchProposal on EXTRACT_DISPATCH_YAML.
+if [[ "$SYSTEM_PROMPT" == *"build planning assistant"* ]]; then
+  if [[ "$INPUT" == "SUMMARIZE_BUILD" ]]; then
+    RESULT='What the user wants: a working build delivered end to end.
+Acceptance criteria: the feature behaves as described and is covered by tests.
+Boundaries: behaviour and outcomes only; no specific modules or code paths named here.'
+  elif [[ "$INPUT" == "EXTRACT_DISPATCH_YAML" ]]; then
+    RESULT='status: ready
+proposal:
+  team: implementation_plan
+  title: stub-build-task
+  rationale: |
+    stub rationale for handing this build brief to implementation planning
+  acceptance_clauses:
+    - Plain clause is fine
+    - Colon clause: with colon
+  counter_case:
+    against: stub argument against committing to this scope now
+    cheapest_80: stub cheapest cut that still delivers most of the value
+    cost_estimate: insufficient data'
+  else
+    RESULT="Stub build-chat response for: ${INPUT:0:60}"
+  fi
+elif [[ "$SYSTEM_PROMPT" == *"task continuation advisor"* ]]; then
+  if [[ "$INPUT" == "EXTRACT_DISPATCH_YAML" ]]; then
+    RESULT='status: ready
+proposal:
+  team: implementation_plan
+  rationale: |
+    stub workspace-chat rationale
+  instructions: null
+  scope_audit: []
+  counter_case:
+    against: stub argument against committing to this scope now
+    cheapest_80: stub cheapest cut that still delivers most of the value
+    cost_estimate: insufficient data'
+  else
+    RESULT='Stub workspace-chat response.
+<dispatch-readiness state="ready" missing=""/>'
+  fi
+else
+
+case "$SYSTEM_PROMPT" in
+  *"You are the implementation team running inside a leased checkout"*)
+    # The implementer worker runs with cwd=<worktree path>. Write a
+    # marker file + commit so captured_commits returns a real commit.
+    if command -v git >/dev/null 2>&1; then
+      printf 'print("e2e impl marker")\n' > feature.py
+      git add -A >/dev/null 2>&1 || true
+      GIT_AUTHOR_NAME=stub GIT_AUTHOR_EMAIL=stub@e2e \
+        GIT_COMMITTER_NAME=stub GIT_COMMITTER_EMAIL=stub@e2e \
+        git commit -q -m "feat(e2e): stub impl commit" >/dev/null 2>&1 || true
+    fi
+    RESULT="## Summary
+stub impl ran and committed feature.py
+## Commits
+- feat(e2e): stub impl commit (feature.py)"
+    ;;
+  *"You fix issues raised by code review"*)
+    # implementation_fix: same shape as impl, but a different commit
+    # subject so captured_commits can be asserted distinctly.
+    if command -v git >/dev/null 2>&1; then
+      printf 'print("e2e fix marker")\n' >> feature.py
+      git add -A >/dev/null 2>&1 || true
+      GIT_AUTHOR_NAME=stub GIT_AUTHOR_EMAIL=stub@e2e \
+        GIT_COMMITTER_NAME=stub GIT_COMMITTER_EMAIL=stub@e2e \
+        git commit -q -m "fix(e2e): stub impl_fix commit" >/dev/null 2>&1 || true
+    fi
+    RESULT="## Summary
+stub impl_fix addressed the review and committed feature.py
+## Commits
+- fix(e2e): stub impl_fix commit (feature.py)"
+    ;;
+  *"You are the architect"*)
+    RESULT="STUB ARCHITECT"
+    ;;
+  *"backend analyst"*)
+    RESULT="STUB BACKEND"
+    ;;
+  *"frontend analyst"*)
+    RESULT="STUB FRONTEND"
+    ;;
+  *"QA planner"*)
+    RESULT="STUB QA"
+    ;;
+  *"devil's advocate"*)
+    RESULT="STUB DEVIL"
+    ;;
+  *"judge on the verification team"*)
+    # Iteration-aware: when the inbound implementation synthesis carries
+    # the impl_fix marker ("stub impl_fix") we approve, otherwise we
+    # request changes once. This drives the
+    # impl → verification(REQUEST_CHANGES) → impl_fix → verification(APPROVE)
+    # → pr_merge → retrospective chain. Opt-in via ALAN_E2E_PR_MERGE_FLOW=1
+    # to keep existing E2E tests (which assume a single APPROVE) unchanged.
+    if [[ "${ALAN_E2E_PR_MERGE_FLOW:-}" == "1" && "$INPUT" != *"stub impl_fix"* ]]; then
+      RESULT="## Verdict
+VERDICT: REQUEST_CHANGES
+DIFF_FINDINGS_CRITICAL: 1
+## Findings to address
+- feature.py: stub finding (force impl_fix iteration)
+## Rationale
+stub iteration-1 request_changes"
+    else
+      RESULT="## Verdict
+VERDICT: APPROVE
+DIFF_FINDINGS_CRITICAL: 0
+## Rationale
+stub approval"
+    fi
+    ;;
+  *"research orchestrator"*|*"brainstorming orchestrator"*|*"opportunity_scout orchestrator"*|*"invocation orchestrator"*)
+    RESULT="$DISPATCH_PAYLOAD"
+    ;;
+  *"research synthesizer"*|*"brainstorming synthesizer"*|*"opportunity_scout synthesizer"*|*"consolidated handover summary"*)
+    RESULT="STUB INVOCATION SYNTHESIS for: ${TITLE_LINE:-untitled}"
+    ;;
+  # Must stay ABOVE the "specialist research agent" case below: the research
+  # verifier prompt's own text ("...outputs of all specialist research
+  # agents...") contains that case's match substring, so a research-verifier
+  # invocation would otherwise fall through to the worker stub instead of
+  # here. Emits the machine-parseable GAPS/CONFIDENCE/COMPLETENESS tail the
+  # real verifier prompts now require (alan.teams._orchestrated parses it).
+  *"research verifier"*|*"opportunity_scout verifier"*)
+    if [[ "$TITLE_LINE" == e2e-low-completeness-* ]]; then
+      RESULT="STUB VERIFIER OUTPUT for: ${TITLE_LINE:-untitled}
+GAPS:
+- coverage gap one not addressed
+- coverage gap two not addressed
+CONFIDENCE: 0.5
+COMPLETENESS: 0.45"
+    else
+      RESULT="STUB VERIFIER OUTPUT for: ${TITLE_LINE:-untitled}
+GAPS: none
+CONFIDENCE: 0.9
+COMPLETENESS: 0.95"
+    fi
+    ;;
+  *"specialist research agent"*|*"brainstorming specialist"*|*"opportunity_scout specialist"*|*"specialist agent with role"*)
+    RESULT="STUB WORKER OUTPUT"
+    ;;
+  *"synthesizer"*)
+    if [[ "$TITLE_LINE" == *"e2e-scenario-runner-"* ]]; then
+      RESULT="STUB SYNTHESIZED PLAN for: ${TITLE_LINE:-untitled}
+
+\`\`\`yaml decisions.yaml
+decisions:
+  - id: d1
+    statement: \"use option A\"
+    rationale: \"cheapest path forward\"
+    confidence: 0.85
+    reversibility: medium
+files_to_edit:
+  - tests/test_e2e_placeholder.py
+test_scenarios:
+  - id: s_pass
+    description: \"pwd always succeeds\"
+    given: \"workspace cwd exists\"
+    when: \"pwd\"
+    then: \"\"
+  - id: s_fail
+    description: \"predicate mismatch fails\"
+    given: \"workspace cwd exists\"
+    when: \"pwd\"
+    then: \"THIS_WILL_NOT_MATCH_8f3a9c\"
+  - id: s_skipped
+    description: \"empty when is skipped\"
+    given: \"no command\"
+    when: \"\"
+    then: \"\"
+\`\`\`"
+    else
+      RESULT="STUB SYNTHESIZED PLAN for: ${TITLE_LINE:-untitled}${PLAN_DECISIONS_BLOCK}"
+    fi
+    ;;
+  *"scenario_runner on the verification team"*)
+    RESULT="## Scenario results
+
+PASS: s_pass — execution succeeded
+FAIL: s_fail — then predicate not found in combined output
+SKIPPED: s_skipped — when field is empty
+
+## Diagnostic notes
+stub scenario_runner evaluated execution results"
+    ;;
+  # Maintenance team role stubs: each ends with the REPORT CONTRACT tail
+  # (alan/teams/maintenance.py) so _compose_report can build a real
+  # multi-role verdict instead of every role silently falling into "no
+  # tail found". ci_dependency_auditor always reports UNVERIFIED — it
+  # mirrors the real prompt's KNOWN BOUNDARY that gh is not in this role's
+  # allowlist — but the other three stay at NONE/LOW so the composed
+  # severity never reaches MEDIUM; that keeps every other e2e spec that
+  # dispatches the maintenance team (multi-subtask-flow, redispatch) on its
+  # existing terminal/"completed" path.
+  *"code_health_analyst on the maintenance team"*)
+    RESULT="## Orphaned worktrees
+
+No orphaned git worktrees found under the live checkout.
+
+## Workspace-retention residue
+
+- ~/.alan/workspaces/e2e-stale-ws looks completed but was never archived per docs/architecture/retention.md — the retention sweep may be lagging.
+
+## Stray lock/tmp files
+
+None found.
+
+ROLE_SEVERITY: LOW"
+    ;;
+  *"ci_dependency_auditor on the maintenance team"*)
+    RESULT="## CI/automation run history
+
+Could not be queried — see the UNVERIFIED line below.
+
+## Dependency-sweep cadence (context only)
+
+dep_sweep_audit.jsonl shows the sweep running on its configured cadence.
+
+UNVERIFIED: gh is not in this role's tool allowlist in this environment, so recent CI/automation run history could not be queried"
+    ;;
+  *"log_repo_scanner on the maintenance team"*)
+    RESULT="## Recurring errors (with root cause)
+
+- alan.error.log shows repeated ConnectionResetError entries from alan.claude_cli during subprocess teardown; likely a worker process exiting mid-stream on a slow shutdown.
+
+## Stale branches
+
+None found.
+
+## Large/orphaned files
+
+None found.
+
+ROLE_SEVERITY: LOW"
+    ;;
+  *"security_scanner on the maintenance team"*)
+    RESULT="## Secret-file permissions
+
+~/.alan/secrets.env is 600 as expected. No group- or world-readable secret files found.
+
+## Leaked-secret patterns in runtime artifacts
+
+None found.
+
+ROLE_SEVERITY: NONE"
+    ;;
+  *)
+    RESULT="STUB GENERIC for: ${TITLE_LINE:-untitled}"
+    ;;
+esac
+fi
+
+json_encode() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\n'/\\n}"
+  s="${s//$'\t'/\\t}"
+  printf '"%s"' "$s"
+}
+
+RESULT_JSON=$(json_encode "$RESULT")
+
+if [[ "$OUTPUT_FORMAT" == "stream-json" ]]; then
+  printf '%s\n' '{"type":"system","subtype":"init","session_id":"stub"}'
+  printf '%s\n' '{"type":"assistant","message":{"content":"stub deliberation"}}'
+  printf '{"type":"result","subtype":"success","result":%s,"is_error":false,"usage":{"input_tokens":100,"output_tokens":250,"cache_creation_input_tokens":0,"cache_read_input_tokens":50},"total_cost_usd":0.0012}\n' "$RESULT_JSON"
+else
+  printf '{"result": %s, "is_error": false}\n' "$RESULT_JSON"
+fi

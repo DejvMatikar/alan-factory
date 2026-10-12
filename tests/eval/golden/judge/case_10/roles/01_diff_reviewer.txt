@@ -1,0 +1,32 @@
+## Critical findings
+1. alan/teams/pr_merge.py:212 — still calls the old inline retry loop instead
+   of `with_backoff`; owned by sibling subtask `migrate-pr-merge-retry`, not
+   this subtask's diff.
+2. alan/merge_recovery.py:88 — same stale inline retry loop; owned by sibling
+   subtask `migrate-merge-recovery-retry`.
+
+## High findings
+None.
+
+## Medium findings
+None.
+
+## Low findings
+None.
+
+DIFF_FINDINGS_CRITICAL: 2
+
+## INLINE_FINDINGS_YAML
+```yaml
+- path: alan/teams/pr_merge.py
+  line: 212
+  body: |
+    Still uses the old inline retry loop instead of the new with_backoff
+    helper — owned by sibling subtask migrate-pr-merge-retry, out of scope
+    for this review.
+- path: alan/merge_recovery.py
+  line: 88
+  body: |
+    Same stale inline retry loop — owned by sibling subtask
+    migrate-merge-recovery-retry, out of scope for this review.
+```

@@ -1,0 +1,24 @@
+schema_version: "1.15"
+handover_id: handover_fixture-task_v1
+handover_chain_id: chain-converging-001
+handover_type: forward
+task_id: fixture-task
+from_team: verification
+from_invocation_id: inv_001
+to_team_suggestions:
+  - implementation_fix
+iteration: 2
+timestamp_utc: "2026-06-01T10:00:00+00:00"
+decisions:
+  - id: dec-001
+    statement: "Send the two critical findings back to implementation_fix."
+    rationale: "Both findings are concrete, reproducible defects in the diff."
+    confidence: 0.9
+    reversibility: high
+full_synthesis: |
+  VERDICT: REQUEST_CHANGES
+  DIFF_FINDINGS_CRITICAL: 2
+  Finding 1 (CRITICAL): billing.py:88 — payment total updated without a lock;
+  concurrent webhook retries can double-charge.
+  Finding 2 (CRITICAL): shipping.py:140 — missing null check on `address.zip`,
+  raises on international orders.

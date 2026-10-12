@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.alan</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__ALAN_REPO_DIR__/deploy/run_alan.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__ALAN_REPO_DIR__</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>__ALAN_REPO_DIR__/.venv/bin:__ALAN_HOME__/.local/bin:/opt/homebrew/opt/node@22/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>VIRTUAL_ENV</key>
+        <string>__ALAN_REPO_DIR__/.venv</string>
+        <key>ALAN_SLOT_POOL_ROOT</key>
+        <string>__ALAN_HOME__/.alan/slots</string>
+        <key>ALAN_SLOT_REPO_ROOT</key>
+        <string>__ALAN_SLOT_REPO_URL__</string>
+        <key>ALAN_SLOT_UV_CACHE</key>
+        <string></string>
+        <key>ALAN_SLOT_NPM_CACHE</key>
+        <string></string>
+        <key>ALAN_WEB_DIST_DIR</key>
+        <string></string>
+        <key>ALAN_AUTO_ARCHIVE_DAYS</key>
+        <string>14</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>__ALAN_HOME__/.alan/logs/alan.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__ALAN_HOME__/.alan/logs/alan.error.log</string>
+</dict>
+</plist>

@@ -1,0 +1,19 @@
+scale: "0.0-1.0"
+criteria:
+  - id: addresses_brief
+    description: >-
+      The Recommended approach and Implementation steps directly address every
+      requirement stated in the task brief, with no unaddressed clause.
+  - id: concrete_steps
+    description: >-
+      The Implementation steps section is ordered and names exact repo-relative
+      file paths for every change, not vague prose.
+  - id: test_plan_quality
+    description: >-
+      The Test plan section names concrete test files or scenarios that would
+      catch a regression in the described behavior.
+  - id: risk_awareness
+    description: >-
+      The Risks and mitigations section surfaces at least one non-obvious risk
+      (ripple effect, invariant, or edge case) specific to this change, not a
+      generic disclaimer.

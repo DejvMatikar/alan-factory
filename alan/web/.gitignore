@@ -1,0 +1,5 @@
+mobile-audit-results/
+desktop-audit-results/
+screen-captures/
+.reversed-shims/
+.vitest/

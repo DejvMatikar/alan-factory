@@ -1,0 +1,23 @@
+schema_version: "1.15"
+handover_id: handover_fixture-task_v2
+handover_chain_id: chain-gate-001
+handover_type: forward
+task_id: fixture-task
+from_team: verification
+from_invocation_id: inv_003
+to_team_suggestions:
+  - implementation_fix
+iteration: 4
+timestamp_utc: "2026-06-08T13:00:00+00:00"
+decisions:
+  - id: dec-001
+    statement: "Hold for the external gate again rather than raise a code finding."
+    rationale: "Second consecutive clean pass blocked only by the same flaky CI check."
+    confidence: 0.8
+    reversibility: high
+full_synthesis: |
+  VERDICT: REQUEST_CHANGES
+  DIFF_FINDINGS_CRITICAL: 0
+  No code-quality issues found — the diff is still sound.
+  ## External Gate Status
+  CI check "Frontend E2E" is still failing (same known-flaky suite).

@@ -1,0 +1,10 @@
+{
+  "must_survive": [
+    "alan/routes/inbox.py:212",
+    "PR #598",
+    "{\"error\": \"digest webhook not configured\"}",
+    "docs/architecture/acceptance_gate.md",
+    "do not merge until the judge returns a clean APPROVE on the re-review"
+  ],
+  "citation": "PROMPT_AUDIT.md PA-05/PA-29: a verification handover carrying a CRITICAL finding, a fix commit, an error-response payload, and a merge-blocking next step — the compactor must not blur the fix's exact response body or drop the re-review gate instruction."
+}

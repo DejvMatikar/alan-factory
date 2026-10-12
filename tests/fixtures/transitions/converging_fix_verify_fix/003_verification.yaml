@@ -1,0 +1,23 @@
+schema_version: "1.15"
+handover_id: handover_fixture-task_v2
+handover_chain_id: chain-converging-001
+handover_type: forward
+task_id: fixture-task
+from_team: verification
+from_invocation_id: inv_003
+to_team_suggestions:
+  - implementation_fix
+iteration: 4
+timestamp_utc: "2026-06-01T17:00:00+00:00"
+decisions:
+  - id: dec-001
+    statement: "Note the nit but do not block merge on it."
+    rationale: "Both criticals are fixed and covered; the nit is purely cosmetic."
+    confidence: 0.8
+    reversibility: high
+full_synthesis: |
+  VERDICT: REQUEST_CHANGES
+  DIFF_FINDINGS_CRITICAL: 0
+  Both prior findings are fixed and covered by tests. One non-blocking nit:
+  rename `zip` to `postal_code` in shipping.py:145 for clarity — not required
+  before merge.

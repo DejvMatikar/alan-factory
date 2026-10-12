@@ -1,0 +1,5 @@
+## Your task
+
+Subtask `bump-fastapi-starlette-lockfile`: Dependabot-authored `uv.lock`
+bump for `fastapi`/`starlette`, routed through `dependency_sweep` with
+`dependency_bot_authorized=True` on the inbound handover.

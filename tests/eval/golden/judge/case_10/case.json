@@ -1,0 +1,6 @@
+{
+  "situation": "scope_partition_approve",
+  "intended_verdict": "APPROVE",
+  "must_not_flip": false,
+  "citation": "PROMPT_AUDIT.md PA-10: 'add a worked 3-line verdict-block example to the judge prompt (IN_SCOPE line currently prose-only)'; docs/ROADMAP.md PA3.1 item 2. This case exercises the worked DIFF_FINDINGS_CRITICAL / DIFF_FINDINGS_CRITICAL_IN_SCOPE / VERDICT example directly: a raw-nonzero, in-scope-zero split across two sibling subtasks landed in the same PR."
+}

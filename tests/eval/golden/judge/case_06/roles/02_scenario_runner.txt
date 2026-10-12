@@ -1,0 +1,6 @@
+SCENARIOS_WAIVED
+
+## Diagnostic notes
+Lockfile-only Dependabot bump; `dependency_bot_authorized` on the inbound
+handover marks this task scenario-exempt per `_scenarios_waived`. Full CI
+(backend + frontend gates) already covers a lockfile-only change.

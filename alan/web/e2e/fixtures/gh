@@ -1,0 +1,330 @@
+#!/usr/bin/env bash
+# Stub for the `gh` CLI used in E2E tests. Routes on `gh <noun> <verb>` and
+# returns deterministic JSON / stdout so alan.teams.pr_merge can drive its
+# full state machine without a real GitHub PR.
+#
+# Programmable behaviors via env vars (read by the Python harness AND set
+# from Playwright tests):
+#
+#   ALAN_E2E_GH_PR_STATE_FILE   — path to a file holding a JSON list of
+#                                 successive `gh pr view` state responses
+#                                 (e.g. ["OPEN","MERGED"]). On each call we
+#                                 consume the first entry and rewrite the
+#                                 file with the rest. Default: ["MERGED"]
+#                                 so the happy-path "already merged" arm
+#                                 short-circuits with one call.
+#   ALAN_E2E_GH_CHECKS_STATE   — single state value returned for all checks
+#                                 (SUCCESS / FAILURE / PENDING / ...).
+#                                 Default: SUCCESS.
+#   ALAN_E2E_GH_CHECKS_STATE_FILE — path to a file holding the current checks
+#                                 state (single token). When present and the
+#                                 file exists, takes precedence over the env
+#                                 var so specs can flip the state per-test
+#                                 without restarting the webServer.
+#   ALAN_E2E_GH_UNRESOLVED     — number of unresolved review threads in the
+#                                 graphql response. Default: 0.
+#   ALAN_E2E_GH_COPILOT_THREADS — number of Copilot-authored review threads.
+#                                 Default: 0. May be overridden per-test by
+#                                 ALAN_E2E_GH_COPILOT_THREADS_FILE.
+#   ALAN_E2E_GH_COPILOT_COMMENTS — number of Copilot-authored PR-level issue
+#                                 comments in the graphql response. Default: 0.
+#                                 May be overridden per-test by
+#                                 ALAN_E2E_GH_COPILOT_COMMENTS_FILE.
+#   ALAN_E2E_GH_HUMAN_COMMENTS — number of human-authored PR-level issue
+#                                 comments. Default: 0.
+#   ALAN_E2E_GH_MERGE_RC       — exit code for `gh pr merge`. Default: 0.
+#   ALAN_E2E_GH_MERGE_STATE    — mergeStateStatus value returned by the
+#                                 readiness `gh pr view --json
+#                                 mergeStateStatus,reviewDecision,
+#                                 statusCheckRollup` query that the
+#                                 dispatcher's pr_merge gate consults
+#                                 before enqueuing the pr_merge team
+#                                 (alan/dispatcher.py:_enforce_pr_merge_gate).
+#                                 Default: "CLEAN".
+#   ALAN_E2E_GH_REVIEW_DECISION — reviewDecision in the same readiness
+#                                 payload. Default: "APPROVED". The
+#                                 readiness call does NOT consume the
+#                                 ALAN_E2E_GH_PR_STATE_FILE queue (it is
+#                                 reserved for pr_merge's poll loop).
+#   ALAN_E2E_GH_BRANCH         — branch name to emit when callers query the
+#                                 PR's `headRefName` (used by
+#                                 alan.teams._pr_branch.resolve_existing_branch
+#                                 to fetch + worktree the PR branch). Default:
+#                                 "e2e-stub-pr-branch". The stub idempotently
+#                                 creates this branch locally from HEAD, in
+#                                 $ALAN_WORKTREE_REPO_ROOT (the isolated repo
+#                                 worktree.py actually branches from, not this
+#                                 process's cwd), so `git worktree add -B
+#                                 <branch> <branch>` (the path impl_fix takes
+#                                 after `git fetch origin <branch>` fails for
+#                                 an origin-less local branch) succeeds
+#                                 without colliding with `main`, which is
+#                                 checked out at the repo root and refused by
+#                                 `git worktree add`.
+#   ALAN_E2E_GH_OAUTH_SCOPES_FILE — path to a file holding the current
+#                                 X-OAuth-Scopes header value for `gh api -i
+#                                 user` (alan.github_repos.probe_workflow_scope).
+#                                 Defaults to a scope list containing
+#                                 "workflow" so every existing step-3/step-4
+#                                 and mobile-audit fixture keeps seeing a
+#                                 passing workflow_write row. A literal "none"
+#                                 in the file means emit no X-OAuth-Scopes
+#                                 header at all (the fine-grained-token case).
+#   ALAN_E2E_GH_DELIVERY_FILE  — path to a JSON file whose content is emitted
+#                                 verbatim when `gh pr view <n> --json
+#                                 title,mergedAt,files,commits,url` is called
+#                                 (the delivery-summary query from
+#                                 alan.delivery.fetch_pr_delivery). Falls back
+#                                 to a hardcoded sample payload when unset or
+#                                 the file is missing, so existing specs that
+#                                 don't set this env var keep working. This
+#                                 env var is intentionally separate from
+#                                 ALAN_E2E_GH_PR_STATE_FILE to avoid
+#                                 interfering with pr_merge's poll loop.
+#
+# The stub is intentionally tolerant of unknown subcommands: it falls
+# through to exit 0 with empty stdout so dispatchers that happen to call
+# `gh auth status` or similar don't trip the test.
+
+set -euo pipefail
+
+NOUN="${1:-}"
+VERB="${2:-}"
+
+case "$NOUN" in
+  pr)
+    case "$VERB" in
+      view)
+        # The readiness query's --json field list now carries both
+        # "mergeStateStatus" and "headRefName" (PrReadiness.head_ref_name),
+        # so this check must run BEFORE the bare-headRefName branch-lookup
+        # check below, or every readiness poll would be misrouted into the
+        # branch-lookup arm and pr_merge would spin until "not mergeable".
+        if [[ "$*" == *"mergeStateStatus"* ]]; then
+          MERGE_STATE="${ALAN_E2E_GH_MERGE_STATE:-CLEAN}"
+          REVIEW_DECISION="${ALAN_E2E_GH_REVIEW_DECISION:-APPROVED}"
+          ROLLUP_STATE="${ALAN_E2E_GH_CHECKS_STATE_FILE:-}"
+          if [[ -n "$ROLLUP_STATE" && -f "$ROLLUP_STATE" ]]; then
+            ROLLUP_CONCLUSION="$(cat "$ROLLUP_STATE")"
+          else
+            ROLLUP_CONCLUSION="${ALAN_E2E_GH_CHECKS_STATE:-SUCCESS}"
+          fi
+          HEAD_SHA="$(git rev-parse HEAD 2>/dev/null || printf '0000000000000000000000000000000000000000')"
+          BRANCH="${ALAN_E2E_GH_BRANCH:-e2e-stub-pr-branch}"
+          # "state" here is fixed at OPEN, independent of ALAN_E2E_GH_PR_STATE_FILE
+          # (that queue is reserved for pr_merge's own polls and scaffold-PR
+          # onboarding checks below) — verification's merged-guard reads state via
+          # this combined field instead of the bare `--json state` query.
+          printf '{"mergeStateStatus":"%s","reviewDecision":"%s","statusCheckRollup":[{"name":"e2e-stub","conclusion":"%s","status":"COMPLETED"}],"headRefOid":"%s","headRefName":"%s","state":"OPEN"}\n' \
+            "$MERGE_STATE" "$REVIEW_DECISION" "$ROLLUP_CONCLUSION" "$HEAD_SHA" "$BRANCH"
+          exit 0
+        fi
+        # impl_fix / implementation use `gh pr view <n> --json headRefName`
+        # to find the PR's branch. Idempotently create a unique local
+        # branch from HEAD so `git worktree add -B <branch> <branch>`
+        # (after the origin fetch fails, falling back to the bare ref)
+        # succeeds without colliding with `main` (which is checked out at
+        # the repo root and refused by `git worktree add`).
+        if [[ "$*" == *"headRefName"* ]]; then
+          BRANCH="${ALAN_E2E_GH_BRANCH:-e2e-stub-pr-branch}"
+          BRANCH_REPO="${ALAN_WORKTREE_REPO_ROOT:-.}"
+          if ! git -C "$BRANCH_REPO" show-ref --verify --quiet "refs/heads/$BRANCH"; then
+            git -C "$BRANCH_REPO" branch "$BRANCH" HEAD >/dev/null 2>&1 || true
+          fi
+          printf '%s\n' "$BRANCH"
+          exit 0
+        fi
+        if [[ "$*" == *"headRefOid"* ]]; then
+          # implementation_fix's sonar-annotation lookup queries the PR head
+          # SHA. Return HEAD without touching the state-file queue so it
+          # stays reserved for pr_merge's --json state polls below.
+          git rev-parse HEAD 2>/dev/null || printf '0000000000000000000000000000000000000000\n'
+          exit 0
+        fi
+        if [[ "$*" == *"mergedAt"* ]]; then
+          DELIVERY_FILE="${ALAN_E2E_GH_DELIVERY_FILE:-}"
+          if [[ -n "$DELIVERY_FILE" && -f "$DELIVERY_FILE" ]]; then
+            cat "$DELIVERY_FILE"
+          else
+            printf '{"title":"stub PR","mergedAt":"2026-05-25T00:00:00Z","url":"https://github.com/DejvMatikar/alan/pull/999","files":[{"path":"alan/stub.py"}],"commits":[{"oid":"abc1234abc1234abc1234abc1234abc1234abc123","messageHeadline":"feat: stub"}]}\n'
+          fi
+          exit 0
+        fi
+        STATE_FILE="${ALAN_E2E_GH_PR_STATE_FILE:-}"
+        if [[ -n "$STATE_FILE" && -f "$STATE_FILE" ]]; then
+          # Pop the first entry; default to "MERGED" if list is empty.
+          python3 - "$STATE_FILE" <<'PY'
+import json, sys, os
+p = sys.argv[1]
+try:
+    with open(p) as f:
+        seq = json.load(f)
+except Exception:
+    seq = []
+if not seq:
+    print("MERGED")
+    sys.exit(0)
+head, *rest = seq
+print(head)
+with open(p, "w") as f:
+    json.dump(rest, f)
+PY
+        else
+          echo "MERGED"
+        fi
+        exit 0
+        ;;
+      checks)
+        STATE_FILE_PATH="${ALAN_E2E_GH_CHECKS_STATE_FILE:-}"
+        if [[ -n "$STATE_FILE_PATH" && -f "$STATE_FILE_PATH" ]]; then
+          STATE="$(cat "$STATE_FILE_PATH")"
+        else
+          STATE="${ALAN_E2E_GH_CHECKS_STATE:-SUCCESS}"
+        fi
+        printf '[{"name":"e2e-stub","state":"%s"}]\n' "$STATE"
+        if [[ "$STATE" == "FAILURE" || "$STATE" == "ERROR" ]]; then
+          exit 8
+        fi
+        exit 0
+        ;;
+      merge)
+        # Record every `gh pr merge` call so E2E specs can assert it was
+        # (or wasn't) invoked. Marker contains one line per call: argv joined
+        # by spaces. Set ALAN_E2E_GH_MERGE_MARKER to enable.
+        if [[ -n "${ALAN_E2E_GH_MERGE_MARKER:-}" ]]; then
+          printf '%s\n' "$*" >> "$ALAN_E2E_GH_MERGE_MARKER" 2>/dev/null || true
+        fi
+        exit "${ALAN_E2E_GH_MERGE_RC:-0}"
+        ;;
+      review)
+        exit 0
+        ;;
+      create)
+        # Test impl flow if some path opens a PR; just emit a fake URL.
+        printf 'https://github.com/DejvMatikar/alan/pull/9999\n'
+        exit 0
+        ;;
+    esac
+    ;;
+  repo)
+    if [[ "$VERB" == "view" ]]; then
+      printf '{"owner":{"login":"DejvMatikar"},"name":"alan"}\n'
+      exit 0
+    fi
+    ;;
+  api)
+    if [[ "$VERB" == "-i" && "${3:-}" == "user" ]]; then
+      # github_repos.probe_workflow_scope's `gh api -i user` — emits raw HTTP
+      # headers (the -i flag) so the caller can read X-OAuth-Scopes.
+      SCOPES_FILE="${ALAN_E2E_GH_OAUTH_SCOPES_FILE:-}"
+      if [[ -n "$SCOPES_FILE" && -f "$SCOPES_FILE" ]]; then
+        SCOPES="$(cat "$SCOPES_FILE")"
+      else
+        SCOPES="repo, workflow"
+      fi
+      if [[ "$SCOPES" == "none" ]]; then
+        printf 'HTTP/2.0 200 OK\r\n\r\n{"login":"stub"}\n'
+      else
+        printf 'HTTP/2.0 200 OK\r\nX-OAuth-Scopes: %s\r\n\r\n{"login":"stub"}\n' "$SCOPES"
+      fi
+      exit 0
+    fi
+    if [[ "$VERB" == "graphql" ]]; then
+      # Handle mutations: resolve thread or post reply
+      if [[ "$*" == *"resolveReviewThread"* ]]; then
+        printf '{"data":{"resolveReviewThread":{"thread":{"isResolved":true}}}}\n'
+        exit 0
+      fi
+      if [[ "$*" == *"addPullRequestReviewThreadReply"* ]]; then
+        printf '{"data":{"addPullRequestReviewThreadReply":{"comment":{"id":"stub-reply"}}}}\n'
+        exit 0
+      fi
+      UNRESOLVED="${ALAN_E2E_GH_UNRESOLVED:-0}"
+      COPILOT_FILE="${ALAN_E2E_GH_COPILOT_THREADS_FILE:-}"
+      if [[ -n "$COPILOT_FILE" && -f "$COPILOT_FILE" ]]; then
+        COPILOT_N="$(cat "$COPILOT_FILE")"
+      else
+        COPILOT_N="${ALAN_E2E_GH_COPILOT_THREADS:-0}"
+      fi
+      COPILOT_COMMENTS_FILE="${ALAN_E2E_GH_COPILOT_COMMENTS_FILE:-}"
+      if [[ -n "$COPILOT_COMMENTS_FILE" && -f "$COPILOT_COMMENTS_FILE" ]]; then
+        COPILOT_COMMENTS_N="$(cat "$COPILOT_COMMENTS_FILE")"
+      else
+        COPILOT_COMMENTS_N="${ALAN_E2E_GH_COPILOT_COMMENTS:-0}"
+      fi
+      HUMAN_COMMENTS_N="${ALAN_E2E_GH_HUMAN_COMMENTS:-0}"
+      # Emit human unresolved nodes + Copilot-authored nodes + non-thread
+      # comments and reviews.
+      python3 - "$UNRESOLVED" "$COPILOT_N" "$COPILOT_COMMENTS_N" "$HUMAN_COMMENTS_N" <<'PY'
+import json, sys
+n_human = int(sys.argv[1])
+n_copilot = int(sys.argv[2])
+n_copilot_comments = int(sys.argv[3])
+n_human_comments = int(sys.argv[4])
+nodes = [{"id": f"PRTI_human_{i}", "isResolved": False} for i in range(n_human)]
+for i in range(n_copilot):
+    nodes.append({
+        "id": f"PRTI_copilot_{i}",
+        "isResolved": False,
+        "comments": {"nodes": [{
+            "body": f"Copilot comment {i}", "databaseId": 1000 + i,
+            "author": {"login": "copilot-pull-request-reviewer", "__typename": "Bot"},
+        }]},
+    })
+total = n_human + n_copilot
+comments = []
+for i in range(n_copilot_comments):
+    comments.append({
+        "databaseId": 5000 + i,
+        "body": f"Copilot issue comment {i}",
+        "author": {"login": "copilot-pull-request-reviewer", "__typename": "Bot"},
+    })
+for i in range(n_human_comments):
+    comments.append({
+        "databaseId": 6000 + i,
+        "body": f"Human issue comment {i}",
+        "author": {"login": f"human_{i}", "__typename": "User"},
+    })
+print(json.dumps({"data": {"repository": {"pullRequest": {
+    "reviewThreads": {"totalCount": total, "nodes": nodes},
+    "comments": {"totalCount": len(comments), "nodes": comments},
+    "reviews": {"totalCount": 0, "nodes": []},
+}}}}))
+PY
+      exit 0
+    fi
+    if [[ "$VERB" == "-X" ]]; then
+      # Branch-protection/repo-settings writes (PATCH repos/<slug>, PUT
+      # repos/<slug>/branches/<branch>/protection) — always succeed; neither
+      # caller parses the (empty) stdout.
+      exit 0
+    fi
+    if [[ "$VERB" == repos/*/branches/*/protection ]]; then
+      # branch_protection_compat.compare_branch_protection's read path — the
+      # real call has NO leading slash, unlike the /repos/* case below (which
+      # a leading-slash call would otherwise fall through to, deferring every
+      # protection row as unknown and making "protected" unreachable in e2e).
+      CHECKS="${ALAN_E2E_GH_AUTHORITATIVE_CHECKS:-python-ci}"
+      printf '{"required_conversation_resolution":{"enabled":true},"required_pull_request_reviews":{"required_approving_review_count":0},"required_status_checks":{"contexts":["%s"],"checks":[]}}\n' "$CHECKS"
+      exit 0
+    fi
+    if [[ "$VERB" == repos/* ]]; then
+      # repo_scaffold.apply_branch_protection reads this first (for
+      # default_branch) before writing — same no-leading-slash fix.
+      printf '{"default_branch":"main","allow_squash_merge":true,"delete_branch_on_merge":true}\n'
+      exit 0
+    fi
+    if [[ "$VERB" == "/repos/"* ]]; then
+      exit 0
+    fi
+    ;;
+  auth)
+    # Some workflows call `gh auth status`; pretend we're logged in.
+    echo "Logged in as DejvMatikar"
+    exit 0
+    ;;
+esac
+
+# Unknown subcommand → no-op success. Avoids cascading failures when alan
+# adds new gh invocations the stub hasn't been updated for.
+exit 0

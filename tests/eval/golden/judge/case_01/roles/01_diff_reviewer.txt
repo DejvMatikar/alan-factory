@@ -1,0 +1,25 @@
+## Critical findings
+1. alan/routes/infra.py:88 — `/api/version` reads `os.environ["BUILD_SHA"]`
+   with no default, raising KeyError in any environment lacking that
+   variable. This line belongs to sibling subtask `add-version-endpoint`,
+   not to this subtask's diff.
+
+## High findings
+None.
+
+## Medium findings
+None.
+
+## Low findings
+None.
+
+DIFF_FINDINGS_CRITICAL: 1
+
+## INLINE_FINDINGS_YAML
+```yaml
+- path: alan/routes/infra.py
+  line: 88
+  body: |
+    `/api/version` raises KeyError on a missing BUILD_SHA env var — owned by
+    sibling subtask add-version-endpoint, out of scope for this review.
+```

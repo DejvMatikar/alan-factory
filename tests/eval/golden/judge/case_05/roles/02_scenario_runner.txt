@@ -1,0 +1,9 @@
+## Scenario results
+1. frontend-typecheck-passes — SKIPPED (rc=4: test_ref `frontend-typecheck-passes` not found among collected tests; the plan's authored id does not match any current test node)
+2. frontend-lint-passes — SKIPPED (rc=4: test_ref `frontend-lint-passes` not found among collected tests; the plan's authored id does not match any current test node)
+
+## Diagnostic notes
+Both scenarios SKIPPED at rc=4 (missing/renamed test_ref), a runner-level
+condition distinct from rc=5 (no tests collected). Per the scenario_runner's
+own contract, SKIPPED is non-blocking — only an explicit FAIL status blocks
+the verdict.

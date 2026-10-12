@@ -1,0 +1,7 @@
+scale: >-
+  0.0-1.0 per case — fraction of the case's must_survive identifiers that
+  appear verbatim (exact substring match) in the compacted output. Suite
+  score = mean per-case survival rate over scored cases. Advisory only: the
+  compactor model (Haiku) is non-deterministic, so this metric is observed
+  in the weekly sweep and never gates a pull request.
+min_cases: 5

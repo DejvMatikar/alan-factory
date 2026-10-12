@@ -1,0 +1,12 @@
+owner: standin-owner
+repo: standin-repo
+posture: propose
+authoritative_checks:
+  - Standin Checks
+code_quality:
+  organization: standin-org
+  project_key: standin-org_standin-repo
+main_ci_workflow: standin-ci.yml
+deploy_workflow: standin-deploy.yml
+dependency_sweep: false
+triage_sweep: true

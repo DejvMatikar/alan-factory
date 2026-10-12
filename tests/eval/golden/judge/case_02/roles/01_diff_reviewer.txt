@@ -1,0 +1,31 @@
+## Critical findings
+1. alan/teams/pr_merge.py:404 — still reads `reason.legacy_code`, which no
+   longer exists on `ParkReason` after this rename; this file is owned by
+   sibling subtask `update-pr-merge-park-refs`, not this subtask's diff.
+2. alan/routes/inbox.py:525 — same stale `legacy_code` reference; owned by
+   sibling subtask `update-inbox-park-refs`, not this subtask's diff.
+
+## High findings
+None.
+
+## Medium findings
+None.
+
+## Low findings
+None.
+
+DIFF_FINDINGS_CRITICAL: 2
+
+## INLINE_FINDINGS_YAML
+```yaml
+- path: alan/teams/pr_merge.py
+  line: 404
+  body: |
+    Stale `reason.legacy_code` reference after the field rename — owned by
+    sibling subtask update-pr-merge-park-refs, out of scope for this review.
+- path: alan/routes/inbox.py
+  line: 525
+  body: |
+    Stale `reason.legacy_code` reference after the field rename — owned by
+    sibling subtask update-inbox-park-refs, out of scope for this review.
+```

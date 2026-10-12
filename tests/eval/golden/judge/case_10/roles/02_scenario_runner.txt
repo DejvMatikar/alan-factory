@@ -1,0 +1,10 @@
+## Scenario results
+1. with-backoff-retries-then-succeeds — PASS (tests/test_retry.py::test_with_backoff_retries_then_succeeds)
+2. with-backoff-exhausts-and-raises — PASS (tests/test_retry.py::test_with_backoff_exhausts_and_raises)
+
+## Diagnostic notes
+Both scenarios subprocess-grounded, exit code 0. Note for the judge: the
+DIFF_FINDINGS_CRITICAL count above is the diff_reviewer's RAW count (2) —
+both findings are entirely on OUT-OF-SCOPE files owned by sibling subtasks.
+Compute DIFF_FINDINGS_CRITICAL_IN_SCOPE from the IN-SCOPE ACCEPTANCE
+OUTCOMES block, not from the raw count.

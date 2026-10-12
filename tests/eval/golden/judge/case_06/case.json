@@ -1,0 +1,6 @@
+{
+  "situation": "waived_findings",
+  "intended_verdict": "APPROVE",
+  "must_not_flip": false,
+  "citation": "docs/architecture/acceptance_gate.md:94-100 (PR #336): 'SCENARIOS_WAIVED is retained as a narrowed audited escape hatch for exceptional legacy cases ... It is not a general bypass of the gate' and the judge prompt 'describes it as a narrowed escape hatch rather than a general bypass'; :100 documents the same non-blocking rule for the dependency-bot auto-waiver (dependency_bot_authorized)."
+}

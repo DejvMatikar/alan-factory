@@ -1,0 +1,11 @@
+{
+  "mean": 0.833,
+  "case_scores": {
+    "case_01": 0.75,
+    "case_02": 0.75,
+    "case_03": 1.0
+  },
+  "margin": 0.15,
+  "computed_at": "2026-07-12T00:00:00+00:00",
+  "note": "PA-23: re-blessed for the per-criterion PASS/FAIL pass-fraction scoring format (alan/behavioral_eval.py's _parse_score no longer reads a bare SCORE: scalar), which shifts the score distribution vs the prior baseline. case_04_anchor is a deliberately-bad calibration control and is intentionally excluded from this mean — see ANCHOR_CASE_ID/ANCHOR_CEILING. Re-bless via a reviewed PR diff after running `uv run python -m alan.behavioral_eval`; never hand-edit without a fresh sweep backing the new mean. `margin` is descriptive-only (mirrors REGRESSION_MARGIN at bless time) — only `mean` is read by load_baseline_score(); change alan/behavioral_eval.py's REGRESSION_MARGIN constant to actually move the gate."
+}

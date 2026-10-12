@@ -1,0 +1,16 @@
+## Your task
+
+Subtask `add-npm-prefix-to-allowlist`: admit `("npm", "--prefix")` in the
+scenario runner's command allowlist so frontend scenarios can execute.
+
+## TEST SCENARIOS
+
+### 1. frontend-typecheck-passes — runner allowlist admits npm --prefix
+- Given: the web workspace at alan/web
+- When: npm --prefix alan/web run typecheck
+- Then: the command exits 0
+
+### 2. frontend-lint-passes — runner allowlist admits npm --prefix
+- Given: the web workspace at alan/web
+- When: npm --prefix alan/web run lint
+- Then: the command exits 0

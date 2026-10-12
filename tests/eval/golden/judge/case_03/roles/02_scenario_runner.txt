@@ -1,0 +1,6 @@
+## Scenario results
+1. retention-cutoff-30-days — PASS (tests/test_retention.py::test_cutoff_uses_30_day_window)
+2. retention-sweep-deletes-past-cutoff — PASS (tests/test_retention.py::test_sweep_deletes_rows_past_cutoff)
+
+## Diagnostic notes
+Both scenarios subprocess-grounded, exit code 0.

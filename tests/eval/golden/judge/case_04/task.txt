@@ -1,0 +1,5 @@
+## Your task
+
+Subtask `tighten-cors-origin-allowlist`: restrict the FastAPI CORS
+middleware's allowed origins to the configured production host instead of
+`"*"`.

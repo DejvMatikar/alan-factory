@@ -1,0 +1,4 @@
+## Your task
+
+Subtask `sanitize-user-supplied-slug`: validate the `slug` path parameter on
+`POST /api/projects/{slug}` before it reaches the filesystem lookup.

@@ -1,0 +1,15 @@
+## Your task
+
+Subtask `extract-shared-retry-helper`: extract the exponential-backoff retry
+loop duplicated across three callers into a single `alan/retry.py` helper,
+owning only the helper module and its own tests.
+
+## IN-SCOPE ACCEPTANCE OUTCOMES
+- `alan/retry.py` exposes `with_backoff(fn, *, attempts, base_delay_s)` with
+  the same jitter/backoff behavior as the three call sites it replaces.
+
+## OUT-OF-SCOPE ACCEPTANCE OUTCOMES
+- `alan/teams/pr_merge.py` call site migrated to `with_backoff` (owned by
+  sibling subtask `migrate-pr-merge-retry`).
+- `alan/merge_recovery.py` call site migrated to `with_backoff` (owned by
+  sibling subtask `migrate-merge-recovery-retry`).

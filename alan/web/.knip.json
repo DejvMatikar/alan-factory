@@ -1,0 +1,18 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["e2e/**/*.spec.ts"],
+  "playwright": {
+    "config": [
+      "playwright.config.ts",
+      "playwright.mobile.config.ts",
+      "playwright.desktop.config.ts",
+      "playwright.capture.config.ts",
+      "playwright.reversed.config.ts"
+    ]
+  },
+  "project": ["src/**/*.{ts,tsx}", "e2e/**/*.ts"],
+  "ignore": ["src/api/schema.ts"],
+  "ignoreExportsUsedInFile": true,
+  "ignoreDependencies": ["tailwindcss"],
+  "ignoreBinaries": ["python3", "ps", "uv", "sqlite3"]
+}

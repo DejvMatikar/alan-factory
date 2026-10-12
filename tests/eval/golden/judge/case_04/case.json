@@ -1,0 +1,6 @@
+{
+  "situation": "scenarios_missing",
+  "intended_verdict": "REQUEST_CHANGES",
+  "must_not_flip": false,
+  "citation": "docs/architecture/acceptance_gate.md:104: 'the scenario runner returns SCENARIOS_MISSING and the verifier is forced to REQUEST_CHANGES — even on a 0-CRITICAL, fully-covered diff'; docs/audits/failure-classes-2026-07/README.md §4: spiral_audit kind=scenarios_missing, 2 real incidents."
+}

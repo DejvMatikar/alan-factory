@@ -1,0 +1,27 @@
+# {project_title} — Conventions
+
+This repository was onboarded onto alan with the **dotnet** stack preset.
+`dotnet restore` fetches NuGet packages; `dotnet build`/`dotnet test` build and
+run the test suite.
+
+## Commands
+
+```bash
+dotnet restore
+dotnet build
+dotnet test
+dotnet format --verify-no-changes
+```
+
+## Gates (CI, `.github/workflows/ci.yml`)
+
+The `dotnet-ci` check runs on every pull request and must pass before merge:
+
+- `dotnet build`
+- `dotnet test`
+- `dotnet format --verify-no-changes`
+
+## Dependencies
+
+Dependabot (`.github/dependabot.yml`) opens weekly update pull requests for both
+NuGet packages and GitHub Actions.

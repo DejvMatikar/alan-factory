@@ -1,0 +1,11 @@
+owner: acme-labs
+repo: widget-app
+posture: self_merge
+authoritative_checks:
+  - Widget CI
+code_quality:
+  organization: acme-labs
+  project_key: acme-labs_widget-app
+main_ci_workflow: ci.yml
+dependency_sweep: true
+triage_sweep: false

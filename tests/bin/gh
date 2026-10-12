@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "gh stub (tests/bin/gh): alan's test suite never runs the real gh; mock the call in the test (tests/gh_guard.py)" >&2
+exit 86

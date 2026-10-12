@@ -1,0 +1,4 @@
+## Your task
+
+Subtask `escape-html-in-inbox-item-title`: escape user-supplied inbox item
+titles before rendering them in the digest email template.

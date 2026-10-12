@@ -1,0 +1,29 @@
+schema_version: "1.15"
+handover_id: handover_fixture-task_v1
+handover_chain_id: chain-gate-reroute-001
+handover_type: forward
+task_id: fixture-task
+from_team: verification
+from_invocation_id: inv_001
+to_team_suggestions:
+  - pr_merge
+iteration: 2
+timestamp_utc: "2026-08-20T11:00:00+00:00"
+decisions:
+  - id: dec-001
+    statement: "verification verdict: REQUEST_CHANGES"
+    rationale: "APPROVE downgraded on an external gate with nothing attributable to the diff; pr_merge owns the rerun ladder."
+    confidence: 0.9
+    reversibility: high
+full_synthesis: |
+  > PARKED ON EXTERNAL GATES — not a code-quality rejection.
+  VERDICT: REQUEST_CHANGES
+  DIFF_FINDINGS_CRITICAL: 0
+  No code-quality issues found — the diff is sound.
+  ## External Gate Status
+  Downgraded APPROVE → REQUEST_CHANGES because GitHub reports the PR is not currently mergeable (mergeStateStatus / reviewDecision / required checks):
+  - failing checks: Frontend E2E (Playwright, blocking)
+  (mergeStateStatus=BLOCKED, reviewDecision=CHANGES_REQUESTED)
+  GATE_ACTIONABLE: no
+  No failing check is attributable to this diff — every blocker is merge state, a pending check, or a quarantined/known-flaky check. Code changes cannot clear this block.
+  GATE_FAILING_TEST: alan/web/e2e/home-refetch-stability.spec.ts — [chromium] › e2e/home-refetch-stability.spec.ts:52:3 › engines-bucket refetch stability › no layout jump

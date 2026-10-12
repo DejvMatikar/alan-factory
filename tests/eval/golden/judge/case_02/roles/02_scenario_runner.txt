@@ -1,0 +1,10 @@
+## Scenario results
+1. park-reason-code-field-exists — PASS (tests/test_park.py::test_park_reason_has_code_field)
+2. park-reason-legacy-code-removed — PASS (tests/test_park.py::test_park_reason_legacy_code_removed)
+
+## Diagnostic notes
+Both scenarios subprocess-grounded, exit code 0. Note for the judge: the
+DIFF_FINDINGS_CRITICAL count above is the diff_reviewer's RAW count (2) —
+both findings are entirely on OUT-OF-SCOPE files. Compute
+DIFF_FINDINGS_CRITICAL_IN_SCOPE from the IN-SCOPE ACCEPTANCE OUTCOMES block,
+not from the raw count.

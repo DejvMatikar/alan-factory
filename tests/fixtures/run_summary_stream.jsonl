@@ -1,0 +1,16 @@
+{"type":"system","subtype":"init","session_id":"turn-1","cwd":"/repo"}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"call_1","name":"Read","input":{"file_path":"alan/build_chat.py"}}]}}
+{"type":"user","content":[{"type":"tool_result","tool_use_id":"call_1","content":"...file contents..."}]}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"call_2","name":"Grep","input":{"pattern":"stream_path"}}]}}
+{"type":"user","content":[{"type":"tool_result","tool_use_id":"call_2","content":"3 matches"}]}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"call_3","name":"Read","input":{"file_path":"alan/explore_chat.py"}}]}}
+{"type":"user","content":[{"type":"tool_result","tool_use_id":"call_3","content":"...file contents..."}]}
+{"type":"assistant","message":{"content":[{"type":"text","text":"Here is my answer."}]}}
+{"type":"result","subtype":"success","is_error":false,"result":"Here is my answer.","session_id":"turn-1","total_cost_usd":0.001,"usage":{"input_tokens":120,"output_tokens":340,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}}
+{"type":"system","subtype":"init","session_id":"turn-1","cwd":"/repo"}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"call_4","name":"Read","input":{"file_path":"alan/routes/build_chat.py"}}]}}
+{"type":"user","content":[{"type":"tool_result","tool_use_id":"call_4","content":"...file contents..."}]}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"call_5","name":"Bash","input":{"command":"git log -1"}}]}}
+{"type":"user","content":[{"type":"tool_result","tool_use_id":"call_5","content":"commit abc123"}]}
+{"type":"assistant","message":{"content":[{"type":"text","text":"status: ready\ntitle: t"}]}}
+{"type":"result","subtype":"success","is_error":false,"result":"status: ready\ntitle: t","session_id":"turn-1","total_cost_usd":0.0007,"usage":{"input_tokens":200,"output_tokens":150,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}}

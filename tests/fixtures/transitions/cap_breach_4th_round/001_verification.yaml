@@ -1,0 +1,23 @@
+schema_version: "1.15"
+handover_id: handover_fixture-task_v4
+handover_chain_id: chain-capbreach-001
+handover_type: forward
+task_id: fixture-task
+from_team: verification
+from_invocation_id: inv_004
+to_team_suggestions:
+  - implementation_fix
+iteration: 8
+timestamp_utc: "2026-06-11T23:31:00+00:00"
+decisions:
+  - id: dec-001
+    statement: "Send the one remaining critical back to implementation_fix for a fourth round."
+    rationale: "Fix is converging — three of four findings resolved — but one blocking defect remains."
+    confidence: 0.85
+    reversibility: high
+full_synthesis: |
+  VERDICT: REQUEST_CHANGES
+  DIFF_FINDINGS_CRITICAL: 1
+  Round 4: three of the four original findings are now fixed and verified.
+  One remaining CRITICAL: retry_worker.py:212 still swallows the exception
+  instead of re-raising after the third attempt.

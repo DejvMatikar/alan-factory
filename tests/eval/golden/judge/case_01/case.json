@@ -1,0 +1,6 @@
+{
+  "situation": "scope_partition_approve",
+  "intended_verdict": "APPROVE",
+  "must_not_flip": false,
+  "citation": "PROMPT_AUDIT.md PA-10: verification judge is 'Currently compliant in production (78/78 in-scope APPROVEs parsed; retry never fired)' when a scope block partitions raw vs in-scope CRITICAL counts; the `## IN-SCOPE ACCEPTANCE OUTCOMES` / `## OUT-OF-SCOPE ACCEPTANCE OUTCOMES` mechanism itself is documented at docs/architecture/acceptance_gate.md:18 (scoped_dod)."
+}

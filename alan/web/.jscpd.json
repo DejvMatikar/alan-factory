@@ -1,0 +1,8 @@
+{
+  "threshold": 1,
+  "minLines": 10,
+  "minTokens": 70,
+  "ignore": ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}", "**/__mocks__/**", "**/test/**", "**/e2e/**", "**/src/api/schema.ts"],
+  "reporters": ["consoleFull", "json"],
+  "exitCode": 1
+}

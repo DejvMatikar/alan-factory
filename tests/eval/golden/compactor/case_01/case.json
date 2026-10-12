@@ -1,0 +1,10 @@
+{
+  "must_survive": [
+    "alan/teams/_scenario_runner.py:139-144",
+    "PR #641",
+    "Coverage failure: total of 97 is less than fail-under=100",
+    "docs/architecture/acceptance_gate.md",
+    "do not merge PR #641 until this is resolved"
+  ],
+  "citation": "PROMPT_AUDIT.md PA-05: the compactor's preserve-list must keep file:line refs, PR numbers, a real gate-failure message, the next-step file path, and the blocking open question verbatim — this case models a realistic implementation handover carrying all five identifier classes."
+}

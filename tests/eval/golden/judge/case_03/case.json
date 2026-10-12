@@ -1,0 +1,6 @@
+{
+  "situation": "gate_park",
+  "intended_verdict": "APPROVE",
+  "must_not_flip": false,
+  "citation": "docs/audits/failure-classes-2026-07/README.md §4: spiral_audit kind=external_gate_blocked, 14 real incidents, evidence 'verifier output contains \"## External Gate Status\" with 0 critical findings'; docs/architecture/pr_iteration_pipeline.md:83-84 (D10a, PR #265) confirms the judge's own verdict is APPROVE pre-downgrade — the park to a non-sticky COMMENT is applied mechanically downstream by _maybe_downgrade_for_external_gates, never by the judge itself, which never sees gate status in its input."
+}

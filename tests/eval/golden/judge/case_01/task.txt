@@ -1,0 +1,12 @@
+## Your task
+
+Subtask `add-ping-endpoint`: add a liveness probe endpoint. The parent
+workspace `multi-route-health-hardening` was split into two subtasks by the
+decomposer; this subtask owns only the `/api/ping` route. A sibling subtask
+`add-version-endpoint` owns the `/api/version` route touched in the same PR.
+
+## IN-SCOPE ACCEPTANCE OUTCOMES
+- GET /api/ping returns {"ok": true} with a 200 status and requires no auth.
+
+## OUT-OF-SCOPE ACCEPTANCE OUTCOMES
+- GET /api/version returns the running build SHA (owned by sibling subtask add-version-endpoint).

@@ -1,0 +1,31 @@
+{
+  "tapTarget": {
+    "minPx": 44,
+    "source": "WCAG 2.5.5 / Apple HIG"
+  },
+  "contrast": {
+    "normalTextMinRatio": 4.5,
+    "largeTextMinRatio": 3,
+    "source": "WCAG 2.1 AA"
+  },
+  "viewport": {
+    "floorWidthPx": 390,
+    "floorLabel": "iPhone 16e",
+    "referenceWidths": [
+      { "widthPx": 390, "label": "iPhone 16e", "isFloor": true },
+      { "widthPx": 402, "label": "iPhone 17", "isFloor": false }
+    ]
+  },
+  "safeArea": {
+    "advisory": true,
+    "verifiable": false,
+    "guidance": "Respect device safe-area insets (notch, home indicator, rounded corners) using CSS env(safe-area-inset-*) variables. This cannot be deterministically measured in a headless browser, so it is guidance only and is never subject to an automated pass/fail assertion."
+  },
+  "desktopAudit": {
+    "viewport": { "widthPx": 1440, "heightPx": 900 },
+    "fitHeadroomPx": 24,
+    "anchorTolerancePx": 3,
+    "bandEpsilonPx": 4,
+    "minRepeatingGroupSize": 3
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "must_survive": [
+    "PR #607",
+    "bind: address already in use",
+    "launchctl kickstart -k gui/$(id -u)/ai.alan",
+    "uv run python -m alan.deploy_verify --pr 607",
+    "deploy_verify cannot safely kill the stale process itself"
+  ],
+  "citation": "PROMPT_AUDIT.md PA-05: a deploy_verify handover whose entire value is the exact recovery command and the exact escalation blocker — a paraphrased command or a softened 'cannot intervene' loses the actionable content downstream teams need."
+}

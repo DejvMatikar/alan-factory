@@ -1,0 +1,21 @@
+schema_version: "1.15"
+handover_id: handover_fixture-task_f1
+handover_chain_id: chain-gate-001
+handover_type: forward
+task_id: fixture-task
+from_team: implementation_fix
+from_invocation_id: inv_002
+to_team_suggestions:
+  - verification
+iteration: 3
+timestamp_utc: "2026-06-08T09:00:00+00:00"
+decisions:
+  - id: dec-001
+    statement: "Rebase and re-trigger CI instead of touching product code."
+    rationale: "The verifier found zero code-quality issues; the only blocker was flaky CI."
+    confidence: 0.75
+    reversibility: high
+full_synthesis: |
+  No code change was needed — re-ran the "Frontend E2E" job after rebasing
+  onto latest main. The failure did not reproduce locally; requesting
+  another verification pass to confirm the gate clears.

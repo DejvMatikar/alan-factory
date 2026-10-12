@@ -1,0 +1,6 @@
+{
+  "situation": "scenarios_missing",
+  "intended_verdict": "REQUEST_CHANGES",
+  "must_not_flip": false,
+  "citation": "PROMPT_AUDIT.md PA-09: 'observed judges write it in negation (\"This is not a SCENARIOS_MISSING case\") ... false-negative (full revisit cap burned) on paraphrase'; docs/ROADMAP.md PA3.1 mandates a both-directions marker rule (verbatim-only-when-true, never negated/hypothetical). This case is a small, clean, zero-CRITICAL diff with genuinely no test scenarios attached — it checks that the tightened marker-discipline instruction does not tempt the judge to hedge away from REQUEST_CHANGES just because the diff itself looks harmless."
+}

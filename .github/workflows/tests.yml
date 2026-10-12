@@ -1,0 +1,515 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  ALAN_LOGS_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/logs
+  ALAN_QUEUE_DB_PATH: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/queue.db
+  ALAN_WORKSPACES_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/workspaces
+  ALAN_STATE_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/state
+  ALAN_BUILD_CHAT_SESSIONS_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/build-chat-sessions
+  ALAN_EXPLORE_CHAT_SESSIONS_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/explore-chat-sessions
+  ALAN_PROJECTS_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/projects
+  ALAN_SECRETS_STORE_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/secrets
+  ALAN_ENGINES_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/engines
+  ALAN_PLANS_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/plans
+  ALAN_DRIVER_LOOP_STATE_ROOT: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/driver-loop-state
+  ALAN_SLOT_POOL_ROOT: ""
+  ALAN_WORKTREE_REPO_ROOT: ""
+
+jobs:
+  drift-gate:
+    name: CLAUDE.md drift gate
+    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'drift-ok')
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        with:
+          list-files: csv
+          filters: |
+            loadbearing:
+              - 'alan/server.py'
+              - 'alan/routes/infra.py'
+              - 'alan/routes/_deps.py'
+              - 'alan/claude_cli.py'
+              - 'alan/__main__.py'
+              - 'deploy/ai.alan.plist'
+              - 'pyproject.toml'
+              - 'scripts/deploy_restart_decision.py'
+              - 'alan/served_sha.py'
+              - 'alan/deploy_refresh.py'
+              - 'scripts/deploy_refresh.py'
+            docs:
+              - 'CLAUDE.md'
+              - 'docs/AGENTIC_CODING_GUIDE.md'
+              - 'docs/architecture/**'
+      - name: Require doc update when load-bearing files change
+        if: steps.filter.outputs.loadbearing == 'true' && steps.filter.outputs.docs != 'true'
+        run: |
+          echo "::error::Load-bearing files changed without an update under docs/architecture/, CLAUDE.md, or docs/AGENTIC_CODING_GUIDE.md."
+          echo "Touched load-bearing files in this PR:"
+          echo "${{ steps.filter.outputs.loadbearing_files }}"
+          echo ""
+          echo "Update the relevant docs/architecture/*.md, CLAUDE.md (Architecture index / Active gates), or docs/AGENTIC_CODING_GUIDE.md to reflect the change."
+          echo "Bypass with the 'drift-ok' PR label if the change genuinely needs no doc update."
+          exit 1
+
+  test-backend:
+    name: Backend tests + coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - run: uv sync --locked --extra dev
+      - name: Pin uv managed-python dir to the real home
+        run: echo "UV_PYTHON_INSTALL_DIR=${UV_PYTHON_INSTALL_DIR:-$HOME/.local/share/uv/python}" >> "$GITHUB_ENV"
+      - name: Backend tests (HOME sandboxed away from production ~)
+        env:
+          HOME: /tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/home
+        run: |
+          mkdir -p "$HOME"
+          printf '[user]\n\tname = alan-ci\n\temail = alan-ci@localhost\n' > "$HOME/.gitconfig"
+          uv run python scripts/git_state_gate.py -- uv run pytest
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: backend-coverage
+          path: coverage.xml
+          retention-days: 7
+
+  lint-python:
+    name: Python lint (ruff + mypy + vulture)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - run: uv sync --locked --extra dev
+      - run: uv run ruff check .
+      - run: uv run mypy --num-workers=4 alan/ tests/
+      - run: uv run vulture --min-confidence 80 alan/ tests/
+
+  lint-python-pyright:
+    name: Python lint (pyright strict)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - run: uv sync --locked --extra dev
+      - run: uv run pyright
+
+  lint-imports:
+    name: Layered architecture (import-linter)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - run: uv sync --locked --extra dev
+      - run: uv run lint-imports
+
+  ccn-gate:
+    name: CCN gate (lizard CCN<8 + xenon)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - run: uv sync --locked --extra dev
+      - name: lizard — every function CCN <= 7 (enforces user "CCN < 8")
+        run: uv run lizard --CCN 7 --length 60 --languages python --exclude "alan/web/*" alan/
+      - name: xenon — module/average rank A (avg CCN <= 5)
+        run: uv run xenon --max-modules A --max-average A alan/
+
+  security-audit:
+    name: Security audit (bandit + pip-audit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+      - name: Read the pull request's changed files
+        id: diff
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          changed=$(git -c core.quotePath=false diff --name-only --no-renames HEAD^1 HEAD)
+          specs=$(grep -E '^alan/web/e2e/.*\.spec\.ts$' <<< "$changed" || true)
+          if grep -qE '^(uv\.lock|pyproject\.toml)$' <<< "$changed"; then
+            deps=true
+          else
+            deps=false
+          fi
+          {
+            echo "e2e_specs_files<<E2E_SPECS_END"
+            echo "$specs"
+            echo "E2E_SPECS_END"
+            echo "deps=$deps"
+          } >> "$GITHUB_OUTPUT"
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - run: uv sync --locked --extra dev
+      - run: uv run bandit -c pyproject.toml -r alan/
+      - name: pip-audit (locked deps, excluding the local project)
+        if: github.event_name == 'pull_request' && steps.diff.outputs.deps == 'true'
+        run: uv run python -m alan.pip_audit_gate --check
+
+  lint-frontend:
+    name: Frontend lint (eslint + tsc + knip + dep-cruiser + jscpd)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: alan/web
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run lint:knip
+      - run: npm run lint:deps
+      - run: npm run lint:dup
+      - run: npm run build
+
+  api-types-drift:
+    name: OpenAPI types drift (generated client vs backend schema)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
+        with:
+          node-version: "22"
+      - run: uv sync --locked --extra dev
+      - name: Install web deps
+        run: npm ci
+        working-directory: alan/web
+      - name: Regenerate from a fresh schema dump and compare
+        run: npm run check:api-types
+        working-directory: alan/web
+
+  test-frontend:
+    name: Frontend tests + coverage (100/100/100/100)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: alan/web
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npm run test:coverage
+        env:
+          VITEST_MAX_WORKERS: "3"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: frontend-coverage
+          path: alan/web/coverage/lcov.info
+          retention-days: 7
+
+  e2e-frontend:
+    name: Frontend E2E (Playwright, blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+      - name: Read the pull request's changed files
+        id: diff
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          changed=$(git -c core.quotePath=false diff --name-only --no-renames HEAD^1 HEAD)
+          specs=$(grep -E '^alan/web/e2e/.*\.spec\.ts$' <<< "$changed" || true)
+          if grep -qE '^(uv\.lock|pyproject\.toml)$' <<< "$changed"; then
+            deps=true
+          else
+            deps=false
+          fi
+          {
+            echo "e2e_specs_files<<E2E_SPECS_END"
+            echo "$specs"
+            echo "E2E_SPECS_END"
+            echo "deps=$deps"
+          } >> "$GITHUB_OUTPUT"
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
+        with:
+          node-version: "22"
+      - run: uv sync --locked --extra dev
+      - name: Install web deps
+        run: npm ci
+        working-directory: alan/web
+      - name: Build frontend (so FastAPI mounts dist)
+        run: npm run build
+        working-directory: alan/web
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: alan/web
+      - name: Derive unique e2e port range + root
+        run: |
+          echo "E2E_WORKERS=3" >> "$GITHUB_ENV"
+          echo "E2E_PORT=$(( 20000 + ( (${{ github.run_id }} + ${{ github.run_attempt }}) % 2000 ) * 8 ))" >> "$GITHUB_ENV"
+          echo "ALAN_E2E_ROOT=/tmp/alan-ci/${{ github.run_id }}-${{ github.run_attempt }}/e2e" >> "$GITHUB_ENV"
+      - name: Stress changed specs (repeat-each 5, no retries)
+        if: github.event_name == 'pull_request' && steps.diff.outputs.e2e_specs_files != ''
+        working-directory: alan/web
+        env:
+          E2E_SPECS_FILES: ${{ steps.diff.outputs.e2e_specs_files }}
+        run: |
+          export ALAN_E2E_ROOT="${ALAN_E2E_ROOT}-spec-stress"
+          specs=""
+          count=0
+          while IFS= read -r f; do
+            [ -f "../../$f" ] || continue
+            case "$f" in
+              alan/web/e2e/mobile-audit/*|alan/web/e2e/desktop-audit/*|alan/web/e2e/capture/*)
+                continue
+                ;;
+            esac
+            specs="$specs ${f#alan/web/}"
+            count=$((count + 1))
+          done <<< "$E2E_SPECS_FILES"
+          if [ "$count" -eq 0 ]; then
+            msg="changed-spec stress: deletions only, nothing to run"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+            echo "$msg"
+            echo "::notice::$msg"
+          elif [ "$count" -gt 8 ]; then
+            msg="changed-spec stress SKIPPED: $count spec files changed (cap 8; the nightly sweep covers bulk changes)"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+            echo "$msg"
+            echo "::notice::$msg"
+          else
+            msg="changed-spec stress: $count file(s) x5:$specs"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+            echo "$msg"
+            uv run python ../../scripts/git_state_gate.py -- npx playwright test $specs --repeat-each=5 --retries=0
+          fi
+      - name: Run Playwright E2E
+        id: e2e
+        run: uv run python ../../scripts/git_state_gate.py -- npx playwright test
+        working-directory: alan/web
+      - name: Flaky-test summary
+        if: always()
+        run: node scripts/report-flaky.mjs >> "$GITHUB_STEP_SUMMARY"
+        working-directory: alan/web
+      - name: Flake ratchet (new flaky spec files block the PR)
+        if: github.event_name == 'pull_request' && success()
+        run: node scripts/report-flaky.mjs --ratchet >> "$GITHUB_STEP_SUMMARY"
+        working-directory: alan/web
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: alan/web/playwright-report/
+          retention-days: 14
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always() && steps.e2e.outcome == 'success'
+        with:
+          name: playwright-results-json
+          path: alan/web/playwright-results.json
+          retention-days: 30
+
+  audit-mobile:
+    name: UI audit (mobile ratchet baseline)
+    runs-on: macos-15
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
+        with:
+          node-version: "22"
+      - run: uv sync --locked --extra dev
+      - name: Install web deps
+        run: npm ci
+        working-directory: alan/web
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: alan/web
+      - name: Mobile-UI ratchet-baseline audit
+        run: npm run audit:mobile
+        working-directory: alan/web
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: mobile-audit-results
+          path: alan/web/mobile-audit-results/
+          retention-days: 14
+
+  audit-desktop:
+    name: UI audit (desktop ratchet baseline)
+    runs-on: macos-15
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
+        with:
+          node-version: "22"
+      - run: uv sync --locked --extra dev
+      - name: Install web deps
+        run: npm ci
+        working-directory: alan/web
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: alan/web
+      - name: Desktop-UI layout gate
+        run: npm run audit:desktop
+        working-directory: alan/web
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: desktop-audit-results
+          path: alan/web/desktop-audit-results/
+          retention-days: 14
+
+  sonar:
+    name: SonarCloud analysis
+    needs: [test-backend, test-frontend]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Detect whether SonarCloud is connected
+        id: sonar-config
+        shell: bash
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+        run: |
+          connected=true
+          for value in "$SONAR_TOKEN" "$SONAR_ORGANIZATION" "$SONAR_PROJECT_KEY"; do
+            trimmed=$(printf '%s' "$value" | tr -d '[:space:]')
+            if [ -z "$trimmed" ]; then
+              connected=false
+            fi
+          done
+          echo "connected=$connected" >> "$GITHUB_OUTPUT"
+          if [ "$connected" = false ]; then
+            echo "::notice::SonarCloud is not connected, so no analysis ran. Run ./setup.sh to connect it (optional)."
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.sonar-config.outputs.connected == 'true'
+        with:
+          fetch-depth: 0
+      - name: Download backend coverage
+        if: steps.sonar-config.outputs.connected == 'true' && (needs.test-backend.result == 'success' || needs.test-backend.result == 'failure')
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: backend-coverage
+      - name: Download frontend coverage
+        if: steps.sonar-config.outputs.connected == 'true' && (needs.test-frontend.result == 'success' || needs.test-frontend.result == 'failure')
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: frontend-coverage
+          path: alan/web/coverage/
+      - uses: SonarSource/sonarqube-scan-action@22918119ff8e1ca75a623e15c8296b6ea4fbe28f # v8.2.1
+        if: steps.sonar-config.outputs.connected == 'true'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >-
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+
+  gate:
+    name: gate
+    if: always()
+    needs:
+      - drift-gate
+      - test-backend
+      - lint-python
+      - lint-python-pyright
+      - lint-imports
+      - ccn-gate
+      - security-audit
+      - lint-frontend
+      - api-types-drift
+      - test-frontend
+      - e2e-frontend
+      - audit-mobile
+      - audit-desktop
+      - sonar
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every job to succeed
+        shell: bash
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+
+          try:
+              needs = json.loads(os.environ.get("NEEDS", ""))
+          except json.JSONDecodeError:
+              sys.exit("gate: NEEDS is not valid JSON")
+          if not isinstance(needs, dict) or not needs:
+              sys.exit("gate: no needed jobs were reported")
+          skippable = {"drift-gate", "sonar"}
+          bad = {}
+          for job, info in needs.items():
+              result = info.get("result") if isinstance(info, dict) else None
+              if result == "success" or (result == "skipped" and job in skippable):
+                  continue
+              bad[job] = result
+          if bad:
+              sys.exit("gate: jobs not successful: " + json.dumps(bad, sort_keys=True))
+          print("gate: every needed job succeeded")
+          PY

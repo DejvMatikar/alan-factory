@@ -1,0 +1,25 @@
+# {project_title} — Conventions
+
+This repository was onboarded onto alan with the **python** stack preset. It is
+managed with [uv](https://docs.astral.sh/uv/); `uv sync` installs dependencies and
+`uv run <tool>` runs project tooling.
+
+## Commands
+
+```bash
+uv sync
+uv run pytest
+uv run ruff check .
+```
+
+## Gates (CI, `.github/workflows/ci.yml`)
+
+The `python-ci` check runs on every pull request and must pass before merge:
+
+- `uv run pytest`
+- `uv run ruff check .`
+
+## Dependencies
+
+Dependabot (`.github/dependabot.yml`) opens weekly update pull requests for both
+project dependencies and GitHub Actions.

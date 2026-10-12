@@ -1,0 +1,4 @@
+## Your task
+
+Subtask `bump-log-retention-window`: extend `RETENTION_DAYS` from 14 to 30
+and update the retention sweep's cutoff calculation to match.

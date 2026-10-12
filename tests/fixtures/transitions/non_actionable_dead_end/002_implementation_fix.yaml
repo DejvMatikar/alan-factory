@@ -1,0 +1,24 @@
+schema_version: "1.15"
+handover_id: handover_fixture-task_f1
+handover_chain_id: chain-nonactionable-001
+handover_type: forward
+task_id: fixture-task
+from_team: implementation_fix
+from_invocation_id: inv_002
+iteration: 3
+timestamp_utc: "2026-06-09T11:00:00+00:00"
+open_questions:
+  - id: non_actionable_feedback_8f3ac2b1
+    question: >-
+      The requested rename target, `fetchUser`, is already taken by a symbol
+      vendored from `@acme/api-client` in this repo; renaming to it would
+      collide. Cannot comply without forking or patching the third-party
+      package, which is out of scope for this PR.
+    resolver_role: human
+    blocking: true
+    prior_attempts:
+      - "Attempted the rename; build fails with a duplicate-export error from
+         the vendored package."
+full_synthesis: |
+  Could not apply the requested rename — see the open question. No commits
+  pushed.

@@ -1,0 +1,3 @@
+Add a nightly sweep that archives workspaces older than 30 days with
+status=COMPLETED, following the same pattern as archive_stale_completed() in
+alan/retention.py.

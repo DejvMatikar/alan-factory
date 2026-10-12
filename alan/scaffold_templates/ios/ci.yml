@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ios-ci
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Run gate
+        run: |
+          if [ -f scripts/gate.sh ]; then
+            bash scripts/gate.sh
+          else
+            echo "scripts/gate.sh not present yet; ios-ci is green by default until it lands"
+          fi

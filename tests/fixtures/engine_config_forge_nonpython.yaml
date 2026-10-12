@@ -1,0 +1,17 @@
+repo:
+  owner: rustco
+  repo: cargo-service
+
+gate_commands:
+  - [cargo, test]
+  - [cargo, clippy]
+
+warmup_commands:
+  - [cargo, fetch]
+
+forge:
+  repo:
+    owner: rustco
+    repo: cargo-service
+  credential_env_name: RUSTCO_GH_TOKEN
+  authoritative_checks: []

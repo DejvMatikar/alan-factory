@@ -1,0 +1,5 @@
+## Scenario results
+1. slug-traversal-rejected — FAIL (tests/test_routes_projects.py::test_traversal_slug_rejected — AssertionError: expected 400, got 200)
+
+## Diagnostic notes
+Scenario subprocess-grounded, exit code 1 (assertion failure).

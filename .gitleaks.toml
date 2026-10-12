@@ -1,0 +1,14 @@
+title = "alan gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+regexes = [
+  # Synthetic test fixtures (e.g. stub claude responses)
+  '''STUB IMPROVED PROMPT''',
+]
+paths = [
+  # Lockfiles include hashes that look like secrets to scanners
+  '''(uv\.lock|alan/web/package-lock\.json)$''',
+]

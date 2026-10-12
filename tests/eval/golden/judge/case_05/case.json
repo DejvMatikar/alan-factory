@@ -1,0 +1,6 @@
+{
+  "situation": "return_code_drift",
+  "intended_verdict": "APPROVE",
+  "must_not_flip": false,
+  "citation": "PROMPT_AUDIT.md PA-08: 'rc=4 SKIPPED-on-missing-ref is deliberately non-blocking (#630)'; the scenario_runner role contract (alan/teams/verification.py _SCENARIO_RUNNER_PROMPT) states SKIPPED is non-blocking and only an explicit FAIL status blocks the verdict. Covers the planned PA3.2 scenario-gate integrity change (docs/ROADMAP.md PA3.2, PA-06/PA-07/PA-08)."
+}

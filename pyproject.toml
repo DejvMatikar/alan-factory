@@ -1,0 +1,408 @@
+[project]
+name = "alan"
+version = "0.1.0"
+description = "Self-hosted task workspace"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.142.2",
+  "idna>=3.20",
+  "packaging>=26.3,<27",
+  "pip-audit>=2.10.1,<3",
+  "pyyaml>=6.0.3",
+  "starlette>=1.7.0,<2",
+  "uvicorn[standard]>=0.54.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=9.1.1,<10",
+  "pytest-xdist>=3.8,<4",
+  "pytest-cov>=7.1,<8",
+  "pytest-asyncio>=1.4.0,<2",
+  "hypothesis>=6.168.3,<7",
+  "httpx>=0.28.1,<1",
+  "ruff>=0.16.10,<1",
+  "mypy>=2.4.0,<3",
+  "pyright>=1.1.414,<2",
+  "bandit[toml]>=1.9.4,<2",
+  "vulture>=2.16,<3",
+  "lizard>=1.24.0,<2",
+  "xenon>=0.9.3,<1",
+  "import-linter>=2.15,<3",
+  "types-PyYAML>=6.0.12.20260906,<7",
+]
+
+[project.scripts]
+alan = "alan.__main__:main"
+
+[build-system]
+requires = ["hatchling>=1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["alan"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["release"]
+force-exclude = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "S", "B", "BLE", "RET", "PT", "ANN"]
+ignore = ["S603", "S607", "ANN401"]
+
+[tool.ruff.lint.per-file-ignores]
+"alan/__main__.py" = ["E402"]
+"tests/**" = ["S101", "S106", "ANN", "PT"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+
+[tool.pyright]
+include = ["alan"]
+exclude = ["alan/web", "**/__pycache__"]
+pythonVersion = "3.11"
+typeCheckingMode = "strict"
+reportMissingTypeStubs = "error"
+reportUnknownMemberType = "error"
+reportUnknownArgumentType = "error"
+reportUnknownVariableType = "error"
+reportUnreachable = "error"
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", "node_modules", "alan/web"]
+skips = ["B404", "B603", "B607"]
+
+[tool.pip-audit]
+# PYSEC-2025-183 / CVE-2025-45768: disputed by pyjwt upstream (key length
+# is application's responsibility); no fix version exists (every release
+# 0.1.1-2.12.1 is flagged); pyjwt is transitive via claude-agent-sdk.
+# Refs: https://api.osv.dev/v1/vulns/PYSEC-2025-183 (verified 2026-05-20).
+# Revisit when an upstream fix lands or the advisory is withdrawn.
+#
+# MAL-2026-4750: fastapi 0.136.3 ships an undocumented `fastar>=0.9.0`
+# dependency under the [project.optional-dependencies] "standard" group
+# (typosquat/dependency-confusion vector). We depend on plain `fastapi`,
+# NOT `fastapi[standard]`, so the malicious transitive `fastar` is never
+# resolved into our lock. No fixed fastapi release exists yet.
+# Refs: https://api.osv.dev/v1/vulns/MAL-2026-4750 (verified 2026-05-26).
+# Revisit when fastapi publishes a release with the offending extra dep removed.
+ignore-vuln = ["PYSEC-2025-183", "MAL-2026-4750"]
+
+[tool.coverage.run]
+source = ["alan"]
+omit = ["alan/web/*", "alan/__main__.py", "tests/eval/*"]
+branch = true
+relative_files = true
+parallel = true
+
+[tool.coverage.report]
+fail_under = 100
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+]
+
+[tool.pytest.ini_options]
+addopts = '--tb=short -q --cov=alan --cov-branch --cov-report=term-missing --cov-report=xml -n 6 --dist=worksteal --strict-markers --strict-config'
+asyncio_mode = "auto"
+markers = [
+  "slow: long pipeline / e2e tests (deselect with '-m \"not slow\"')",
+  "eval: structural eval metrics (deselect with '-m \"not eval\"'); run via 'uv run pytest -m eval'",
+]
+filterwarnings = [
+  "error",
+  # starlette 1.3.1's TestClient warns that pairing it with `httpx` (rather than the
+  # unreleased `httpx2`) is deprecated; this is test-only — alan/ never imports
+  # starlette.testclient. Drop when we migrate the test client to httpx2.
+  "ignore:Using `httpx` with `starlette.testclient` is deprecated:starlette.exceptions.StarletteDeprecationWarning",
+]
+norecursedirs = ["spikes", "experiments", ".worktrees", ".hypothesis", "release"]
+
+[tool.importlinter]
+root_packages = ["alan"]
+
+[[tool.importlinter.contracts]]
+name = "Layered architecture"
+type = "layers"
+containers = ["alan"]
+layers = [
+  "server",
+  "routes",
+  "app",
+  "agent_catalogue",
+  "agent_catalogue_standalone",
+  "agent_catalogue_standalone_chats",
+  "agent_catalogue_standalone_background",
+  "agent_catalogue_standalone_evals",
+  "agent_catalogue_standalone_operator",
+  "agent_catalogue_standalone_driver_loops",
+  "agent_catalogue_standalone_legacy",
+  "agent_catalogue_standalone_common",
+  "agent_catalogue_teams_impl",
+  "agent_catalogue_teams_impl_verification",
+  "agent_catalogue_teams_impl_user",
+  "agent_catalogue_teams_impl_common",
+  "agent_catalogue_teams_impl_slots",
+  "agent_catalogue_teams_orchestrated",
+  "agent_catalogue_teams",
+  "agent_catalogue_teams_static_common",
+  "agent_catalogue_node",
+  "agent_catalogue_flags",
+  "agent_catalogue_helpers",
+  "agent_catalogue_models",
+  "repo_quiesce",
+  "onboarding",
+  "triage_switch",
+  "reconciler",
+  "_reconciler_paused",
+  "_reconciler_never_started",
+  "_reconciler_orphans",
+  "e2e_health_fixture",
+  "worker_reaper",
+  "dispatcher",
+  "_dispatcher_loop",
+  "_dispatcher_reconcile",
+  "_dispatcher_scenario_rebind",
+  "_dispatcher_selfheal",
+  "_dispatcher_usage_limit",
+  "_dispatcher_retire",
+  "_dispatcher_base",
+  "_dispatcher_resume_outcome",
+  "_dispatcher_brief_refine",
+  "unblock_sweep",
+  "unblock_recipes",
+  "project_auto_continue",
+  "auto_continue",
+  "recurring_status",
+  "recurring_forge",
+  "dispatch_instructions",
+  "repo_status",
+  "delivery_stats",
+  "project_budget",
+  "dispatch",
+  "sticky_instructions",
+  "merge_gate",
+  "merge_recovery",
+  "archive_guard",
+  "workspace_dag",
+  "proactive_rebase",
+  "predispatch_scan",
+  "collision",
+  "loop_guard",
+  "prep_chat",
+  "build_chat",
+  "explore_chat",
+  "engine_config_proposal",
+  "explore_chat_repo",
+  "dispatch_proposal",
+  "_chat_core",
+  "yaml_normalize",
+  "deploy_gate_route",
+  "deploy_wait_gate",
+  "router",
+  "digest_sweep",
+  "digest",
+  "proposal_items",
+  "incident_store",
+  "investigator",
+  "health_windows",
+  "unblock_activity",
+  "rca_store",
+  "unblock_ledger",
+  "incident",
+  "project_amendment",
+  "project_doc",
+  "retention",
+  "dep_advisory_seed",
+  "retention_registry",
+  "events",
+  "eval_sweep",
+  "judge_eval",
+  "compactor_eval",
+  "gold_label",
+  "setup_latch",
+  "engine_preflight",
+  "engine_stack_detect",
+  "engine_presets",
+  "repo_scaffold",
+  "scaffold_templates",
+  "project_roadmap",
+  "forge_gh",
+  "teams",
+  "house_rules",
+  "obligation_direction",
+  "shop_stats",
+  "health",
+  "health_repo_metrics",
+  "finisher_rate",
+  "behavioral_eval",
+  "learning_metrics",
+  "trajectory",
+  "eval_metrics",
+  "dep_sweep",
+  "e2e_failures",
+  "deploy_gate_sweep",
+  "deploy_runs",
+  "deploy_observe",
+  "deploy_verify",
+  "compression",
+  "overlap",
+  "terminal_outcome",
+  "injection",
+  "workspace_index",
+  "workspace_cost",
+  "workspace_size",
+  "scenario_binding",
+  "clause_withdrawal",
+  "handover",
+  "fleet_timing",
+  "workflow_interrupt",
+  "workflow",
+  "node_launch_record",
+  "delivery",
+  "acceptance",
+  "lane_limit",
+  "operator_session",
+  "workspace",
+  "operator_launch",
+  "operator_repos",
+  "dispatch_provenance",
+  "park",
+  "scope_audit",
+  "project",
+  "driver_loop_runner",
+  "driver_loop_status",
+  "driver_loop_schedule",
+  "driver_loop_runs",
+  "driver_loop_pause",
+  "operator_checkout",
+  "operator_pty",
+  "operator_ticket",
+  "operator_prompt",
+  "operator_tmux",
+  "driver_loop_cmd",
+  "driver_loop_registry",
+  "queue",
+  "lifecycle",
+  "worktree",
+  "slot_pool",
+  "manager_summary",
+  "run_summary",
+  "claude_cli",
+  "claude_cli_journal",
+  "launch_spec",
+  "agent_key",
+  "claude_cli_grants",
+  "fleet_load",
+  "headless_prompt",
+  "project_doc_context",
+  "usage_limit",
+  "drift_gate",
+  "setup_verifier",
+  "setup_sonar",
+  "setup_claude_check",
+  "setup_transport",
+  "setup_verdicts",
+  "pip_audit_gate",
+  "ci_budget_check",
+  "ci_budget_drift",
+  "_ci_budget_render",
+  "_ci_jobs_api",
+  "_ci_test_timings",
+  "_ci_drift",
+  "ci_budget",
+  "github_repos",
+  "branch_protection_compat",
+  "secrets_store",
+  "prompt_templates",
+  "default_engine_boot",
+  "config_files",
+  "forge",
+  "engine_config",
+  "repo_accent",
+  "prompt_override_history",
+  "engine_registry_store",
+  "default_profile_writer",
+  "default_profile",
+  "control_plane",
+  "control_token_store",
+  "bind",
+  "turn_policy",
+  "self_update",
+  "self_update_github",
+  "deploy_refresh",
+  "errors",
+  "engine_config_validation",
+  "worker_liveness",
+  "worker_records",
+  "detached_mode",
+  "store",
+  "roots",
+  "live_staleness",
+  "deploy_signal",
+  "served_sha",
+  "deploy_restart",
+  "clock",
+  "source_fetch",
+  "base_ref",
+  "block_correction",
+  "process_runner",
+]
+exhaustive = true
+exhaustive_ignores = ["__main__"]
+# Sole legacy cycle, made visible by the exhaustive contract: health reads the
+# ClassifiedSurface type from the triage pre-gate sensors while teams/triage reads
+# health's cadence + state. Kill by moving ClassifiedSurface below health, then
+# delete this exception.
+ignore_imports = [
+  "alan.health -> alan.teams.triage_pregate",
+]
+
+[[tool.importlinter.contracts]]
+name = "Routes siblings are independent"
+type = "independence"
+modules = [
+  "alan.routes.answer",
+  "alan.routes.workspaces",
+  "alan.routes.infra",
+  "alan.routes.events",
+  "alan.routes.build_chat",
+  "alan.routes.control_token",
+  "alan.routes.explore_chat",
+  "alan.routes.health",
+  "alan.routes.projects",
+  "alan.routes.secrets",
+  "alan.routes.engines",
+  "alan.routes.engines_agents",
+  "alan.routes.engines_accent",
+  "alan.routes.engines_lane",
+  "alan.routes.engines_recurring_status",
+  "alan.routes.engines_visibility",
+  "alan.routes.engine_presets",
+  "alan.routes.engine_sources",
+  "alan.routes.github",
+  "alan.routes.onboarding",
+  "alan.routes.scenario_binding",
+  "alan.routes.dispatch_instructions",
+  "alan.routes.pr_attach",
+  "alan.routes.driver_loops",
+  "alan.routes.operator_terminal",
+]
+
+[tool.vulture]
+paths = ["alan"]
+min_confidence = 80
+exclude = ["alan/web/", ".venv/"]

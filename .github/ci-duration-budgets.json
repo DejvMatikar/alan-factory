@@ -1,0 +1,15 @@
+{
+  "tests.yml": {
+    "Backend tests + coverage": 301,
+    "CCN gate (lizard CCN<8 + xenon)": 12,
+    "CLAUDE.md drift gate": 11,
+    "Frontend E2E (Playwright, blocking)": 89,
+    "Frontend lint (eslint + tsc + knip + dep-cruiser + jscpd)": 50,
+    "Frontend tests + coverage (100/100/100/100)": 73,
+    "Layered architecture (import-linter)": 12,
+    "OpenAPI types drift (generated client vs backend schema)": 19,
+    "Python lint (pyright strict)": 15,
+    "Python lint (ruff + mypy + vulture)": 19,
+    "Security audit (bandit + pip-audit)": 20
+  }
+}

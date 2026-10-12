@@ -1,0 +1,5 @@
+## Your task
+
+Subtask `add-cache-ttl-config`: make the response-cache TTL configurable via
+an environment variable (`ALAN_CACHE_TTL_S`) instead of a hardcoded
+constant.

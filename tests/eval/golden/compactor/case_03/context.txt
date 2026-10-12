@@ -1,0 +1,9 @@
+pr_merge picked up PR #607 (`bump-uvicorn-standard-0-50`) after CI went green. Squash-merged cleanly into main at commit `a1b2c3d`. deploy_verify then began polling `gh run list --branch main --workflow ci-deploy.yml --limit 1` to confirm the auto-deploy run completed.
+
+The first three polls returned `in_progress`. The fourth poll hit a transient GitHub API failure: `HTTP 502: Bad Gateway` from the Actions API, which deploy_verify correctly classified as retryable (per docs/architecture/deploy_verify.md's transient-gh bucket) rather than escalating immediately.
+
+On the fifth poll, the deploy run itself failed with exit code 1: the launchd job `ai.alan` failed to restart, and the workflow log shows `bind: address already in use` on port 8585 — a stale process from a previous deploy had not released the port before the new one started. This is the "run-green-probe-failing" wedge signature docs/architecture/deploy_verify.md describes: the deploy step itself reports success, but the post-deploy health probe against `http://127.0.0.1:8585/api/health` times out.
+
+Blocker (unresolved): deploy_verify cannot safely kill the stale process itself — per its charter it only observes and reports, it never takes destructive action against the live host. Filed as an escalation: "PR #607 merged and CI green, but the ai.alan launchd restart failed with bind: address already in use on port 8585 — a stale process is holding the port. Manual intervention needed: `launchctl kickstart -k gui/$(id -u)/ai.alan` after confirming no other deploy is mid-flight."
+
+Next step: once a human confirms the stale process has been killed and the service is back up, re-run `uv run python -m alan.deploy_verify --pr 607` to confirm the health probe passes before closing this workspace.

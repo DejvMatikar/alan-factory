@@ -1,0 +1,25 @@
+# {project_title} — Conventions
+
+This repository was onboarded onto alan with the **node** stack preset. `npm ci`
+installs exact dependency versions from the lockfile; `npm run <script>` runs
+project tooling.
+
+## Commands
+
+```bash
+npm ci
+npm run test
+npm run lint
+```
+
+## Gates (CI, `.github/workflows/ci.yml`)
+
+The `node-ci` check runs on every pull request and must pass before merge:
+
+- `npm run test`
+- `npm run lint`
+
+## Dependencies
+
+Dependabot (`.github/dependabot.yml`) opens weekly update pull requests for both
+project dependencies and GitHub Actions.

@@ -1,0 +1,11 @@
+Verification ran against PR #598 (`add-inbox-digest-route`). The diff_reviewer surfaced one CRITICAL finding: alan/routes/inbox.py:212 calls `os.environ["DIGEST_WEBHOOK_URL"]` with no default, which raises a bare KeyError in any environment lacking that variable — this is a genuine defect, not scope noise, since the route this subtask owns is the one that reads it. scenario_runner reported 3/3 scenarios PASS, all subprocess-grounded: `uv run pytest tests/test_routes_inbox.py::test_digest_route_requires_webhook_url_env -q`.
+
+Judge verdict: REQUEST_CHANGES, citing the CRITICAL finding above. This is correct per docs/architecture/acceptance_gate.md — a genuine CRITICAL finding on in-scope code always blocks, independent of the external CI/merge-state gate (which separately shows a red `Frontend gates` check on this PR from an unrelated flaky Playwright download, not from this defect).
+
+Posted the inline review comment successfully this time (`review_ok_inline`), unlike the ~42% inline-post failure rate PROMPT_AUDIT.md PA-04 flagged — this file/line pair was inside the diff hunk so GitHub accepted it without a 422.
+
+Fix applied: alan/routes/inbox.py:212 now reads `os.environ.get("DIGEST_WEBHOOK_URL", "")` and the route returns 503 with body `{"error": "digest webhook not configured"}` when the value is empty, instead of crashing. Added tests/test_routes_inbox.py::test_digest_route_503_when_webhook_unset. Re-ran `uv run pytest` clean, `uv run bandit -c pyproject.toml -r alan/` clean (no B105/B106 hits on the new empty-string default).
+
+Open question (blocking): should the 503 body also include a `retry_after` hint for the webhook-not-configured case, matching the shape used in alan/routes/health.py's degraded-dependency responses? Left unresolved pending an API-consistency decision from whoever owns the frontend inbox panel.
+
+Next step: once the retry_after question above is answered, re-request review on PR #598 and re-run the verification team; do not merge until the judge returns a clean APPROVE on the re-review.

@@ -1,0 +1,6 @@
+{
+  "situation": "return_code_drift",
+  "intended_verdict": "APPROVE",
+  "must_not_flip": false,
+  "citation": "PROMPT_AUDIT.md PA-08: 'scenario test_ref drift makes the gate advisory ... rc=4 SKIPPED-on-missing-ref is deliberately non-blocking (#630) ... no rebind mechanism'; restore-scenario-gate-executability (PA-06/PA-07/PA-08) adds a non-blocking judge rebind rider (## Findings to address naming the drifted reference and its closest real test node) alongside a SKIPPED rc=4 result without altering the verdict — this case pins that the rider never flips an otherwise-clean diff to REQUEST_CHANGES."
+}

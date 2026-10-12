@@ -1,0 +1,13 @@
+repo:
+  owner: acme-corp
+  repo: widget-app
+
+posture: propose
+
+forge:
+  repo:
+    owner: acme-corp
+    repo: widget-app
+  credential_env_name: ACME_WIDGET_GH_TOKEN
+  authoritative_checks:
+    - Widget CI

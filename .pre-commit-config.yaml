@@ -1,0 +1,35 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff check (no fix)
+        language: system
+        entry: uv run ruff check
+        types: [python]
+
+      - id: mypy
+        name: mypy strict
+        language: system
+        entry: uv run mypy --num-workers=4 alan/ tests/
+        pass_filenames: false
+        files: ^(alan|tests)/.*\.py$
+
+      - id: tsc
+        name: TypeScript typecheck
+        language: system
+        entry: bash -c 'cd alan/web && npx tsc --noEmit'
+        pass_filenames: false
+        files: ^alan/web/(src|e2e)/
+
+      - id: eslint
+        name: ESLint
+        language: system
+        entry: bash -c 'cd alan/web && npx eslint --max-warnings 0 .'
+        pass_filenames: false
+        files: ^alan/web/(src|e2e)/.*\.[tj]sx?$
+
+      - id: gitleaks
+        name: gitleaks (secret scan)
+        language: system
+        entry: gitleaks protect --staged --redact -v
+        pass_filenames: false

@@ -1,0 +1,15 @@
+## Your task
+
+Subtask `rename-legacy-park-reason-field`: rename `ParkReason.legacy_code` to
+`ParkReason.code` across the park module. Parent workspace
+`park-reason-cleanup` was split into three subtasks; this subtask owns only
+`alan/park.py` and its own tests. Two sibling subtasks own the call sites in
+`alan/teams/pr_merge.py` and `alan/routes/inbox.py` respectively, in the
+same PR.
+
+## IN-SCOPE ACCEPTANCE OUTCOMES
+- `ParkReason.code` replaces `ParkReason.legacy_code` with no behavior change.
+
+## OUT-OF-SCOPE ACCEPTANCE OUTCOMES
+- pr_merge.py call sites updated to the new field name (owned by sibling subtask update-pr-merge-park-refs).
+- routes/inbox.py call sites updated to the new field name (owned by sibling subtask update-inbox-park-refs).

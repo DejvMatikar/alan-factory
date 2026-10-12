@@ -1,0 +1,12 @@
+## Your task
+
+Subtask `restore-scenario-gate-executability`: a planner-authored backend
+scenario's test reference has drifted since the plan was written — the
+implementer renamed the test function during review.
+
+## TEST SCENARIOS
+
+### 1. queue_persists_after_restart — jobs enqueued before restart remain claimable
+- Given: a job is enqueued and the alan service is restarted
+- When: uv run --no-active pytest tests/test_queue.py::test_enqueue_persists_across_restart
+- Then: 1 passed
