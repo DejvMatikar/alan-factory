@@ -55,6 +55,16 @@ Setup's own time: plan on 1 to 2 hours in total. Setup prints the same estimate.
 
 Your first merged pull request takes longer than setup. A task has to be planned, implemented, verified, reviewed and run through CI before alan merges it.
 
+### Opening the web UI
+
+Once setup is complete, the web UI is at `http://127.0.0.1:8585`. You can look around without a token, but making changes needs the control token. Setup never prints the token. In a terminal, as the macOS user that runs alan-factory, copy it to the clipboard:
+
+```
+pbcopy < ~/.alan/state/control_token
+```
+
+In the UI, click the gear icon (its accessible label is **Global settings**), paste the token into **Control token** and click **Save**.
+
 ### If setup stops
 
 A step that fails prints `[failed]` and the reason, and setup carries on with the steps after it. At the end it prints the command that picks up where it stopped, for example:
