@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from alan import prep_chat_link
+from alan._chat_core import ChatMessage
 from tests.prep_chat_link_support import (
     LOCAL_BASE,
     UNKNOWN_SESSION_ID,
@@ -111,6 +112,23 @@ def test_a_transcript_over_the_cap_drops_the_oldest_whole_messages(world: World)
     for kept in range(5, 8):
         assert f"message-{kept:02d}" in transcript
     assert len(transcript) <= _CAP + 200
+
+
+def test_messages_older_than_the_first_one_past_the_cap_are_never_rendered(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    messages = [message("user", _padded(f"message-{n:02d}", 10_000)) for n in range(8)]
+    session_id = build_session(world, transcript=messages)
+    rendered: list[str] = []
+    render = prep_chat_link._render_message
+
+    def counting_render(entry: ChatMessage) -> str:
+        rendered.append(entry.content[:10])
+        return render(entry)
+
+    monkeypatch.setattr(prep_chat_link, "_render_message", counting_render)
+    _block(world, session_id)
+    assert rendered == ["message-07", "message-06", "message-05", "message-04"]
 
 
 def test_the_truncation_line_comes_before_the_kept_messages(world: World) -> None:

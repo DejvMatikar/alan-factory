@@ -207,10 +207,11 @@ def _render_message(message: _chat_core.ChatMessage) -> str:
     return f'<message role="{message.role}">\n{_defang(message.content)}\n</message>'
 
 
-def _newest_within_cap(rendered: list[str]) -> list[str]:
+def _newest_within_cap(messages: list[_chat_core.ChatMessage]) -> list[str]:
     kept: list[str] = []
     total = 0
-    for text in reversed(rendered):
+    for message in reversed(messages):
+        text = _render_message(message)
         total += len(text)
         if kept and total > TRANSCRIPT_CHAR_CAP:
             break
@@ -220,12 +221,11 @@ def _newest_within_cap(rendered: list[str]) -> list[str]:
 
 
 def _transcript_section(messages: list[_chat_core.ChatMessage]) -> str:
-    rendered = [_render_message(message) for message in messages]
-    kept = _newest_within_cap(rendered)
+    kept = _newest_within_cap(messages)
     lines = ["<transcript>"]
-    if len(kept) < len(rendered):
-        omitted = len(rendered) - len(kept)
-        lines.append(f"truncated: {omitted} of {len(rendered)} earlier messages omitted")
+    if len(kept) < len(messages):
+        omitted = len(messages) - len(kept)
+        lines.append(f"truncated: {omitted} of {len(messages)} earlier messages omitted")
     lines.extend(kept)
     lines.append("</transcript>")
     return "\n".join(lines)
