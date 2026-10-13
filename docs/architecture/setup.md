@@ -128,7 +128,6 @@ The `credential` step stores the token alan uses to clone, fetch and push the re
     Issues: Read and write
     Actions: Read and write
     Workflows: Read and write
-    Checks: Read-only
     Commit statuses: Read-only
     Metadata: Read-only (GitHub adds it by itself)
 ```

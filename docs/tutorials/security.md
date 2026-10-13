@@ -114,7 +114,6 @@ Pull requests: Read and write
 Issues: Read and write
 Actions: Read and write
 Workflows: Read and write
-Checks: Read-only
 Commit statuses: Read-only
 Metadata: Read-only (GitHub adds it by itself)
 ```

@@ -34,7 +34,6 @@ PERMISSIONS_TEXT = "\n".join(
         "    Issues: Read and write",
         "    Actions: Read and write",
         "    Workflows: Read and write",
-        "    Checks: Read-only",
         "    Commit statuses: Read-only",
         "    Metadata: Read-only (GitHub adds it by itself)",
         "Why Administration write: alan applies your branch protection and the squash-merge and",

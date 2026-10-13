@@ -514,7 +514,8 @@ def test_the_printed_permissions_are_the_indented_lines_and_not_the_access_line(
     printed = printed_permissions()
     assert "Administration: Read and write" in printed
     assert not any(line.startswith("Repository access") for line in printed)
-    assert len(printed) == 9
+    assert not any(line.startswith("Checks") for line in printed)
+    assert len(printed) == 8
 
 
 def test_the_permission_block_must_sit_in_the_transport_section() -> None:
