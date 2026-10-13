@@ -175,7 +175,7 @@ def test_the_admin_token_finds_the_project_and_the_analysis_token_is_only_checke
         (
             Scenario(sonar_bound_projects=0, sonar_unbound_projects=2),
             "no SonarCloud project is bound to this repository",
-            "choose Analyze new project",
+            "choose + > Analyze new project",
         ),
         (
             Scenario(sonar_bound_projects=2),

@@ -33,12 +33,13 @@ INSTRUCTIONS_TEXT = "\n".join(
         "SonarCloud reviews every pull request for code quality. It advises; it never blocks a",
         "merge. It is optional: press Enter at the admin token prompt to skip it now and connect",
         "it later. Before you paste anything:",
-        "  1. Sign in at https://sonarcloud.io with GitHub and import this repository as a project",
-        "     (Analyze new project). Import it once: setup refuses several projects for one",
+        "  1. Sign in at https://sonarcloud.io (now named SonarQube Cloud) with GitHub and import",
+        "     this repository: + (top right) > Analyze new project > your organization > tick the",
+        "     repository > Set Up. Import it once: setup refuses several projects for one",
         "     repository.",
-        "  2. Create an admin token: SonarCloud > My Account > Security > Generate Tokens, as a",
-        "     user who administers the organization. Setup uses it only to find your project and",
-        "     to read the project's analysis settings; it is never stored.",
+        "  2. Create an admin token: your avatar > My account > Access Tokens > Personal Tokens >",
+        "     Generate Token, as a user who administers the organization. Setup uses it only to",
+        "     find your project and to read the project's analysis settings; it is never stored.",
         "  3. Create an analysis token the same way, as a different SonarCloud user than the admin",
         "     token's. It is stored as a GitHub Actions secret of this repository, so CI can send",
         "     analyses. A token from the same user is refused unless you re-run with",
@@ -57,12 +58,12 @@ RISK_TEXT = "\n".join(
     ]
 )
 ADMIN_REJECTED_INSTRUCTION = (
-    "In your browser: open https://sonarcloud.io, go to My Account > Security, generate a new "
+    "In your browser: open https://sonarcloud.io, go to My account > Access Tokens, generate a new "
     "token as a user who administers the organization, then re-run "
     f"{RESUME_COMMAND}."
 )
 NO_PROJECT_INSTRUCTION = (
-    "In your browser: open https://sonarcloud.io, choose Analyze new project, import this "
+    "In your browser: open https://sonarcloud.io, choose + > Analyze new project, import this "
     f"repository into your organization, then re-run {RESUME_COMMAND}."
 )
 SEVERAL_PROJECTS_INSTRUCTION = (

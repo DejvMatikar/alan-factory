@@ -14,8 +14,8 @@ A copy is ready, dispatches work and passes `gate` without SonarCloud. Nothing i
 
 Setup asks for these in this order. Do the browser steps first, then paste the tokens when setup asks.
 
-1. Sign in at [sonarcloud.io](https://sonarcloud.io) with GitHub. Choose Analyze new project and import your organisation and `<owner>/<repo>`. Import the repository once: setup refuses several projects bound to one repository.
-2. Create an admin token: SonarCloud > My Account > Security > Generate Tokens, as a user who administers the organisation. Setup uses it only on this Mac, to find your project and read its analysis settings. Setup never stores it.
+1. Sign in at [sonarcloud.io](https://sonarcloud.io) (now named SonarQube Cloud) with GitHub. Choose **+** (top right) > Analyze new project, pick your organisation (create one first if you have none), tick `<owner>/<repo>` and choose Set Up. Import the repository once: setup refuses several projects bound to one repository.
+2. Create an admin token: your avatar > My account > Access Tokens > Personal Tokens > Generate Token, as a user who administers the organisation. Setup uses it only on this Mac, to find your project and read its analysis settings. Setup never stores it.
 3. Create an analysis token the same way, as a different SonarCloud user than the admin token's. Setup stores it as a GitHub Actions secret of your copy, so CI can send analyses. A token from the same user is refused unless you accept the stated risk: that token can do everything its user can, including administering the organisation, and every workflow run in your copy can use it. To accept it, run `scripts/setup_macos.sh --only sonar --accept-sonar-user-token`.
 4. Paste the admin token first, then the analysis token. Neither is shown, printed or passed on a command line.
 5. If setup says SonarCloud did not confirm that Automatic Analysis is off, open the project on sonarcloud.io, choose Administration > Analysis Method and turn Automatic Analysis off. Setup carries on without waiting for it.
