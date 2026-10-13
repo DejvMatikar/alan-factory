@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 from collections.abc import Callable
 from pathlib import Path
 
@@ -139,6 +140,17 @@ def _apply_selected(
     return self_update.apply(repo, inputs, pin=pin, force=force)
 
 
+def _backfill_marker(repo: Path, health_url: str) -> None:
+    if _ops.marker_path().is_file():
+        return
+    try:
+        head = _ops.git(repo, "rev-parse", "HEAD").strip()
+    except (subprocess.SubprocessError, OSError):
+        return
+    if _ops.health_ok(health_url, head):
+        _ops.write_marker(head)
+
+
 def _tick(
     repo: Path,
     *,
@@ -157,6 +169,7 @@ def _tick(
         health_url=health_url,
         plist_path=plist_path,
     )
+    _backfill_marker(repo, health_url)
     pending = _pending_journal(repo, pin=pin, force=force)
     if pending is not None:
         _journal.write(pending)
