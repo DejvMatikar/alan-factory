@@ -152,6 +152,10 @@ def _pr_policy_row(repo: _Json) -> tuple[str, str, str]:
     return "pr_policy", "already" if held else "apply", ""
 
 
+def _issues_row(repo: _Json) -> tuple[str, str, str]:
+    return "issues", "already" if _dig(repo, "has_issues") is True else "apply", ""
+
+
 def harden_plan(args: list[str], text: str) -> _Verdict:
     repo = _load(text)
     if _dig(repo, "visibility") == "public":
@@ -159,6 +163,7 @@ def harden_plan(args: list[str], text: str) -> _Verdict:
     else:
         rows = _not_public_rows()
     rows.append(_pr_policy_row(repo))
+    rows.append(_issues_row(repo))
     return 0, [f"{setting} {state} {reason}".rstrip() for setting, state, reason in rows]
 
 

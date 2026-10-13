@@ -18,27 +18,31 @@ Linux and Windows are not supported. Running alan in Docker may follow in a late
 
 ### Install
 
-Clone the template repository, then run setup from that checkout:
+1. Sign in to GitHub in your browser, open this repository and click **Fork**. Keep the name `alan-factory` and keep the fork public: GitHub Free gives branch protection only to public repositories, and alan's merge gate needs it.
+2. In your fork, open the **Actions** tab and click **I understand my workflows, go ahead and enable them**. A fork starts with its workflows off; setup checks this and stops with the same instruction if you skip it.
+3. Clone your fork to `~/alan-factory` and run setup there:
 
 ```
-git clone <template-url> ~/alan-template
-cd ~/alan-template
+git clone https://github.com/<you>/alan-factory.git ~/alan-factory
+cd ~/alan-factory
 ./setup.sh
 ```
 
-Get `<template-url>` from the Code button of the template repository on GitHub. Do not clone it to `~/alan-factory`: that folder is where setup puts your own copy, and setup refuses to continue if something else already sits there.
-
-Setup creates your copy of the repository: a private repository named `alan-factory`, owned by your GitHub account (or by an organisation, with `./setup.sh --owner <org>`), cloned to `~/alan-factory`. Setup then continues from inside your copy, installs alan's service from there and starts it. The template checkout is no longer needed afterwards and can be deleted.
-
-Do not use GitHub's "Use this template" button. If you already made a copy that way, under any name, clone it and run `scripts/setup_macos.sh` inside that clone instead.
+Use plain `git clone`: `gh repo clone` adds an `upstream` remote that points back at this repository. Setup finds your fork already cloned at `~/alan-factory`, installs alan's service from there and starts it. It also turns on Issues for your fork, which a fork starts without.
 
 SonarCloud is optional. Skip it with `./setup.sh --no-sonar`, or press Enter at its first prompt.
+
+#### Private copy (needs GitHub Pro)
+
+To keep your copy private, clone this repository anywhere except `~/alan-factory` (for example `git clone <template-url> ~/alan-template`) and run `./setup.sh` from that checkout. Setup then creates a private repository named `alan-factory`, owned by your GitHub account (or by an organisation, with `./setup.sh --owner <org>`), clones it to `~/alan-factory` and continues from there. The template checkout is no longer needed afterwards. A private repository has branch protection only on a paid GitHub plan (Pro, Team or Enterprise); on GitHub Free the `protect` step fails.
+
+Do not use GitHub's "Use this template" button. If you already made a copy that way, under any name, clone it and run `scripts/setup_macos.sh` inside that clone instead.
 
 ### What only you do
 
 Setup prints this list before it starts and tells you when each step is needed.
 
-1. Sign in to GitHub in your browser when `gh auth login` opens it (about 2 minutes).
+1. Sign in to GitHub in your browser when `gh auth login` opens it (about 2 minutes). If you forked, turn on your fork's workflows in its Actions tab first (step 2 of Install).
 2. Create a fine-grained GitHub token for your repository, in your browser (about 3 minutes). Setup prints the exact permissions when it asks for the token; [Security](docs/tutorials/security.md) lists them.
 3. Approve the GitHub apps alan needs on your repository (about 5 minutes).
 4. Optional: import your repository into SonarCloud and create two SonarCloud tokens (about 10 minutes). See [SonarCloud](docs/tutorials/sonarcloud.md).
@@ -53,10 +57,12 @@ Your first merged pull request takes longer than setup. A task has to be planned
 
 ### If setup stops
 
-If setup stops before it has created your copy, run `./setup.sh` again from the template checkout. Once your copy exists, setup prints a resume command: run it from inside `~/alan-factory`.
+With a fork, run `./setup.sh` or the resume command setup prints from inside `~/alan-factory`. With a private copy, if setup stops before it has created your copy, run `./setup.sh` again from the template checkout; once your copy exists, setup prints a resume command: run it from inside `~/alan-factory`.
 
 - A `copy-destination` refusal means something already sits at `~/alan-factory`. Move it away and run setup again.
 - A `template-clone` refusal means `scripts/setup_macos.sh` was run inside the template checkout. Use `./setup.sh` there instead.
+- A `copy-is-template` refusal means gh is signed in as the account that owns this repository, so your copy would be the template itself. Sign in to gh as a different account, or pass `--owner <org>`.
+- A `harden` failure naming GitHub Actions workflows means your fork's workflows are still off. Turn them on in its Actions tab and run the resume command.
 
 ### Tutorials
 

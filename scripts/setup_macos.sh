@@ -58,7 +58,7 @@ HEALTH_URL="http://127.0.0.1:$SERVICE_PORT/api/health"
 API_BASE="http://127.0.0.1:$SERVICE_PORT"
 TRANSPORT_PURPOSE="transport"
 REVIEWER_PURPOSE="reviewer"
-BIND_SETTINGS="secret_scanning push_protection interaction_limits pr_policy"
+BIND_SETTINGS="secret_scanning push_protection interaction_limits pr_policy issues"
 WORKFLOW_FILE="tests.yml"
 WORKFLOW_REF="main"
 HEALTH_PARSER='import json, sys; d = json.load(sys.stdin); print(d.get("ok") is True, d.get("served_sha") or "")'
@@ -475,6 +475,7 @@ print_checklist() {
   say "  1. Sign in to GitHub in your browser when 'gh auth login' opens it (about 2 minutes)."
   say "  2. Create a fine-grained GitHub token for your repository, in your browser (about 3 minutes); setup prints the exact permissions when it asks for the token."
   say "  3. Approve the GitHub apps alan needs on your repository (about 5 minutes, a later setup step)."
+  say "     If your copy is a fork, also open its Actions tab and click 'I understand my workflows, go ahead and enable them'; a fork starts with its workflows off."
   say "  4. Optional: import your repository into SonarCloud and create two SonarCloud tokens, an admin token and an analysis token from a different SonarCloud user (about 10 minutes); the sonar step asks for both. Press Enter at its first prompt, or pass --no-sonar, to skip SonarCloud."
   say "  5. Create a separate GitHub account for the verifier bot, invite it to your repository with write access, accept the invitation as the bot and create a classic token for it (about 10 minutes); the verifier step asks for the token."
   say "  6. Sign in to Claude yourself: run 'claude' once in a terminal and follow its own prompt. Setup never signs in to Claude for you."
@@ -1183,6 +1184,7 @@ bind_setting_label() {
     push_protection) printf 'push protection' ;;
     interaction_limits) printf 'collaborator-only interaction limits (six months)' ;;
     pr_policy) printf 'pull-request creation limited to collaborators' ;;
+    issues) printf 'issues turned on' ;;
   esac
 }
 
@@ -1215,6 +1217,7 @@ bind_apply_setting() {
       body='{"limit":"collaborators_only","expiry":"six_months"}'
       ;;
     pr_policy) body='{"pull_request_creation_policy":"collaborators_only"}' ;;
+    issues) body='{"has_issues":true}' ;;
   esac
   if ! printf '%s' "$body" | gh api -X "$method" "$path" --input - > /dev/null 2>&1; then
     note failed "GitHub refused the write for $(bind_setting_label "$1")"
@@ -1261,6 +1264,22 @@ bind_handle_setting() {
   esac
 }
 
+bind_workflows_enabled() {
+  local state
+  state="$(gh api "repos/$BIND_ENGINE/actions/workflows/$WORKFLOW_FILE" --jq .state 2>/dev/null)" || return 1
+  [ "$state" = active ]
+}
+
+bind_require_workflows() {
+  if bind_workflows_enabled; then
+    note already "GitHub Actions runs $WORKFLOW_FILE"
+    return 0
+  fi
+  say "      GitHub Actions does not run $WORKFLOW_FILE for $BIND_ENGINE; a fork starts with its workflows off. Turn them on in your browser:"
+  say "      https://github.com/$BIND_ENGINE/actions (click 'I understand my workflows, go ahead and enable them'), then re-run setup."
+  record_failure harden "GitHub Actions workflows are off for $BIND_ENGINE"
+}
+
 step_harden() {
   local plan setting
   BIND_APPLIED=""
@@ -1275,6 +1294,7 @@ step_harden() {
   if [ -n "$BIND_APPLIED" ]; then
     bind_read_back "$BIND_APPLIED"
   fi
+  bind_require_workflows
 }
 
 bind_preflight() {

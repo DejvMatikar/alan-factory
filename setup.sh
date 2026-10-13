@@ -149,6 +149,9 @@ clone_with_retry() {
 step_copy() {
   resolve_copy_owner
   COPY_SLUG="$COPY_OWNER/${TEMPLATE_SLUG#*/}"
+  if [ "$(lower "$COPY_SLUG")" = "$(lower "$TEMPLATE_SLUG")" ]; then
+    refuse copy-is-template "your copy would be $COPY_SLUG, which is the template itself; sign in to gh as a different account or pass --owner <org>"
+  fi
   COPY_DEST="$HOME/${TEMPLATE_SLUG#*/}"
   if copy_is_present; then
     note already "your copy $COPY_SLUG is cloned"

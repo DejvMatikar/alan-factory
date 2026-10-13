@@ -95,7 +95,7 @@ def test_a_run_without_a_failure_prints_no_resume_command(tmp_path: Path) -> Non
     assert run.returncode == 0, run.output
     assert run.headers() == BIND_STEPS
     assert "Resume with" not in run.output
-    assert run.stdout.count("[already]") == 6
+    assert run.stdout.count("[already]") == 8
 
 
 @pytest.mark.parametrize("entry", ["scripts/setup_macos.sh", "setup.sh"])

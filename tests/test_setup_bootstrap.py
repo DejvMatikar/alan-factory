@@ -375,6 +375,19 @@ def test_an_unknown_signed_in_user_without_an_owner_flag_refuses_the_copy(tmp_pa
     assert _gh_writes(run) == []
 
 
+@pytest.mark.parametrize("template", ["example-owner/template-repo", "Example-Owner/Template-Repo"])
+def test_a_copy_that_would_be_the_template_itself_is_refused_before_any_write(
+    tmp_path: Path, template: str
+) -> None:
+    sandbox = make_sandbox(tmp_path)
+    run = _bootstrap(sandbox, "--template", template)
+    assert run.returncode == 1
+    assert "refused at copy: copy-is-template:" in run.stderr
+    assert "--owner <org>" in run.stderr
+    assert _gh_writes(run) == []
+    assert not _copy_dest(sandbox).exists()
+
+
 def test_a_clone_without_a_setup_script_cannot_be_handed_over_to(tmp_path: Path) -> None:
     sandbox = make_sandbox(tmp_path)
     run = _bootstrap(
