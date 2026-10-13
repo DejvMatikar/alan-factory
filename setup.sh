@@ -179,7 +179,7 @@ hand_over() {
   fi
   say ""
   say "handing over to the setup script inside your new clone, from step $next onward"
-  exec /bin/bash "$entry" --from "$next" ${OWNER_ARG:+--owner "$OWNER_ARG"} $session_flag $sonar_flag $no_sonar_flag
+  SETUP_HANDED_OVER=1 exec /bin/bash "$entry" --from "$next" ${OWNER_ARG:+--owner "$OWNER_ARG"} $session_flag $sonar_flag $no_sonar_flag
 }
 
 after_step() {

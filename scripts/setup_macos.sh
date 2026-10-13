@@ -468,6 +468,9 @@ report_failures() {
 }
 
 print_checklist() {
+  if [ "${SETUP_HANDED_OVER:-}" = 1 ]; then
+    return 0
+  fi
   say "alan setup: what will run, and what only you can do"
   say ""
   say "This run installs the tools alan needs, builds it, writes its profile, starts it on this Mac, binds and hardens your GitHub repository, optionally configures SonarCloud, stores the verifier bot's credential, triggers a CI run, checks that Claude Code works under launchd, installs the self-updater, waits for CI (and for SonarCloud, if you connected it) and prints a final report."

@@ -425,3 +425,22 @@ def test_a_leftover_clone_without_a_head_is_replaced_by_a_fresh_one(tmp_path: Pa
     assert run.returncode == 0, run.output
     assert len(run.called("gh", "repo", "clone")) == 1
     assert sandbox.handover_args() == ["--from", "build"]
+
+
+def test_the_handover_tells_the_new_clone_not_to_print_the_checklist_again(
+    tmp_path: Path,
+) -> None:
+    sandbox = make_sandbox(tmp_path)
+    run = _bootstrap(sandbox, "--template", TEMPLATE)
+    assert run.returncode == 0, run.output
+    assert run.stdout.count("what will run, and what only you can do") == 1
+    handed = (sandbox.stub_root / "handover.env").read_text(encoding="utf-8").strip()
+    assert handed == "1"
+
+
+def test_a_handed_over_run_skips_the_checklist_and_still_runs_its_steps(tmp_path: Path) -> None:
+    sandbox = make_sandbox(tmp_path)
+    run = run_setup(sandbox, "--only", "preflight", extra_env={"SETUP_HANDED_OVER": "1"})
+    assert run.returncode == 0, run.output
+    assert "what will run, and what only you can do" not in run.stdout
+    assert run.headers() == ["preflight"]
