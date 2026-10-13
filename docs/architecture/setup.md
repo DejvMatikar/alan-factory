@@ -80,7 +80,7 @@ Marks are hints; probes are authoritative. Every selected step always probes and
 
 `ALAN_ENGINES_ROOT=<dir> python -m alan.default_profile_writer --owner <o> --repo <r>` (`alan/default_profile_writer.py`, in the import layers directly above `alan.default_profile`) builds the profile through `DefaultProfile`, renders sorted YAML, validates the rendered text again, and writes it atomically (`write_text_atomic`). It never touches `resolved()` or the owner file. The CLI accepts no path argument: it resolves the engines directory through `roots.engines_root()`, and the setup script pins `ALAN_ENGINES_ROOT` to `~/.alan/engines` for that one call, so a stray value in the user's shell cannot redirect the write.
 
-The profile: posture `propose`; `authoritative_checks: [gate]`; `authoritative_check_apps: {gate: 15368}` (the integer app id); `enforce_admins: true`; requirements `reviewer_credential` only (`code_quality` is no longer a default requirement, PD28); both sweeps off; `main_ci_workflow: tests.yml`; no deploy workflow; no `code_quality` block (P1.9c writes it after SonarCloud reports).
+The profile: posture `autonomous` (the highest, so the live posture can be anything; lowering it in the UI needs no profile edit, while raising above the profile's posture is refused with 422); `authoritative_checks: [gate]`; `authoritative_check_apps: {gate: 15368}` (the integer app id); `enforce_admins: true`; requirements `reviewer_credential` only (`code_quality` is no longer a default requirement, PD28); both sweeps off; `main_ci_workflow: tests.yml`; no deploy workflow; no `code_quality` block (P1.9c writes it after SonarCloud reports).
 
 | Installed profile | Outcome | stdout | Effect |
 |---|---|---|---|

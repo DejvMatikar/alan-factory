@@ -53,7 +53,7 @@ Setup prints this list before it starts and tells you when each step is needed.
 
 Setup's own time: plan on 1 to 2 hours in total. Setup prints the same estimate.
 
-Your first merged pull request takes longer than setup. A task has to be planned, implemented, verified, reviewed and run through CI, and at posture `propose` the merge waits for you.
+Your first merged pull request takes longer than setup. A task has to be planned, implemented, verified, reviewed and run through CI before alan merges it.
 
 ### If setup stops
 
@@ -115,7 +115,7 @@ alan is an experimental prototype that runs unattended. Once it is set up, its a
 - A separate verifier machine account is mandatory. It is a second GitHub account, distinct from the account that owns your copy.
 - An Anthropic API key is the recommended way to run alan's unattended agents. A Claude subscription plan is governed by its applicable Anthropic terms and usage policies, which may restrict automated or continuous use. Checking that your plan allows how you run alan is your responsibility.
 - SonarCloud is optional. Setup lets you skip it, and the required `gate` check passes without it. If you connect it, its findings never block a merge.
-- A new copy starts at posture `propose`, so every merge waits for you. If you raise the posture so that agents merge on their own, pull requests reach `main` with no human review, and alan's updater then applies them from `main`, restarting the service when a change needs it.
+- A new copy starts at posture `autonomous`, the highest: agents verify and merge their own pull requests, so they reach `main` with no human review once `gate` is green, and alan's updater then applies them from `main`, restarting the service when a change needs it. To review every merge yourself, lower the posture to `propose` in the web UI (repository > Engine configuration > Change posture).
 - Both recurring sweeps start off: the "Failure triage sweep" (`triage_sweep`) and "Alan's dependency sweep" (`dependency_sweep`). Leave them off until your engine is set up and working. They are turned on by setting `triage_sweep` and `dependency_sweep` to `true` in the installed default profile; nothing here promises a toggle for them in the web UI.
 - Implementation roles can still read files through scripts they run, and alan provides no sandbox. Run alan under a dedicated macOS user that owns nothing else. An operating-system sandbox is not provided.
 - When the operator terminal's prerequisites are installed, the terminal holds your full authority. The control token plus network reach to the service is equivalent to a shell on your machine.

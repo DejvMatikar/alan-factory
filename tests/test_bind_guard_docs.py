@@ -164,7 +164,7 @@ def test_security_tutorial_prompt_injection_section_names_each_untrusted_input(
     [
         "run shell commands with no operating-system sandbox",
         "are prefix matches",
-        "posture `propose`",
+        "posture `autonomous`",
         "default in the code, when no posture is set, is `observe`",
         "they apply on a public copy only",
         "last at most six months",

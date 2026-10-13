@@ -71,7 +71,7 @@ The implementation roles run shell commands with no operating-system sandbox. Th
 
 These defences limit the damage:
 
-- Setup configures your copy with the posture `propose`. At that posture alan admits the teams that research, plan and implement, and does not admit the teams that verify and merge until you raise it. The default in the code, when no posture is set, is `observe`, which admits none of them.
+- Setup configures your copy with the posture `autonomous`, which admits every team, including the ones that verify and merge, so pull requests reach `main` without a human review. Lower it to `propose` in the web UI (repository > Engine configuration > Change posture) to make every merge wait for you; at that posture alan admits the teams that research, plan and implement, and not the ones that verify and merge. The default in the code, when no posture is set, is `observe`, which admits none of them.
 - Interaction limits restrict who can open issues, pull requests and comments on a public copy to its collaborators. They apply on a public copy only, last at most six months, and are not renewed automatically. Re-running setup applies them again.
 - A dedicated macOS user keeps your personal files and sign-ins out of an agent's reach (see [Use a dedicated macOS user](#use-a-dedicated-macos-user)).
 - A private repository keeps strangers from filing issues and pull requests at all.
