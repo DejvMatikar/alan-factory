@@ -1723,9 +1723,19 @@ ci_sonar_settled() {
   fi
 }
 
+ci_show_progress() {
+  if [ -z "$1" ] || [ "$1" = "$CI_SHOWN" ]; then
+    return 0
+  fi
+  CI_SHOWN="$1"
+  note wait "CI run $RUN_ID: $1 ($(($2 * LATCH_POLL_SECONDS / 60)) min so far)"
+}
+
 ci_wait() {
-  local attempt=0
+  local attempt=0 progress
   CI_OUTCOME="run-unfinished"
+  CI_SHOWN=""
+  note info "waiting for CI run $RUN_ID (up to $((LATCH_ATTEMPTS * LATCH_POLL_SECONDS / 60)) min); follow it at $RUN_URL"
   while [ "$attempt" -lt "$LATCH_ATTEMPTS" ]; do
     ci_read_run
     case "$CI_STATE" in
@@ -1733,7 +1743,14 @@ ci_wait() {
         CI_OUTCOME="failed"
         return 0
         ;;
-      success) ci_sonar_settled "$1" && return 0 ;;
+      success)
+        ci_sonar_settled "$1" && return 0
+        ci_show_progress "CI is green; waiting for SonarCloud to report" "$attempt"
+        ;;
+      waiting)
+        progress="$(bind_verdict run-progress < "$BIND_DIR/run.json" 2>/dev/null)" || progress=""
+        ci_show_progress "$progress" "$attempt"
+        ;;
     esac
     attempt=$((attempt + 1))
     sleep "$LATCH_POLL_SECONDS"

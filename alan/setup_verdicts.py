@@ -296,6 +296,14 @@ def _red_jobs(jobs: list[_Json]) -> list[str]:
     ]
 
 
+def run_progress(args: list[str], text: str) -> _Verdict:
+    del args
+    states = [_text(job.get("status")) for job in _jobs(_load(text))]
+    done, running = states.count("completed"), states.count("in_progress")
+    queued = len(states) - done - running
+    return 0, [f"{done} of {len(states)} jobs done, {running} running, {queued} queued"]
+
+
 def _gate_is_green(jobs: list[_Json]) -> bool:
     return any(
         _text(job.get("name")) == GATE_JOB and _text(job.get("conclusion")) == "success"
@@ -419,6 +427,7 @@ _COMMANDS: dict[str, Callable[[list[str], str], _Verdict]] = {
     "confirm": confirm,
     "run-newest": run_newest,
     "run-status": run_status,
+    "run-progress": run_progress,
     "sonar-evidence": sonar_evidence,
     "reviewer-distinct": reviewer_distinct,
     "readiness": readiness,
