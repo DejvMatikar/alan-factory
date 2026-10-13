@@ -57,7 +57,43 @@ Your first merged pull request takes longer than setup. A task has to be planned
 
 ### If setup stops
 
-With a fork, run `./setup.sh` or the resume command setup prints from inside `~/alan-factory`. With a private copy, if setup stops before it has created your copy, run `./setup.sh` again from the template checkout; once your copy exists, setup prints a resume command: run it from inside `~/alan-factory`.
+A step that fails prints `[failed]` and the reason, and setup carries on with the steps after it. At the end it prints the command that picks up where it stopped, for example:
+
+```
+Resume with: scripts/setup_macos.sh --from sonar
+```
+
+Fix what the `[failed]` lines name, then run that command from inside `~/alan-factory`. `--from <step>` runs that step and every step after it, in order. Steps that are already done only check their state and report `[already]`, so resuming, or running the whole setup again, is always safe. `--only <step>` runs that one step and nothing else.
+
+The steps, in order:
+
+| Step | What it does |
+|---|---|
+| `preflight` | Checks this Mac: Apple silicon, memory, free disk, port 8585. |
+| `install` | Installs Homebrew tools and the Claude Code CLI, and signs `gh` in to GitHub. |
+| `copy` | `./setup.sh` only: finds your fork in `~/alan-factory`, or creates the private copy. |
+| `build` | Builds the Python environment and the web UI. |
+| `profile` | Writes the configuration for your repository. |
+| `start` | Starts the local service on port 8585. |
+| `credential` | Asks for the fine-grained GitHub token. |
+| `harden` | Applies repository settings and checks that GitHub Actions runs. |
+| `protect` | Protects the `main` branch. |
+| `confirm` | Re-checks the token, the repository and the protection. |
+| `sonar` | Connects SonarCloud (optional). |
+| `verifier` | Asks for the verifier bot's token. |
+| `trigger` | Starts a CI run. |
+| `claude` | Checks that Claude Code works when started by the service. |
+| `updater` | Installs the self-updater. |
+| `latch` | Waits for CI (and SonarCloud), showing its progress. |
+| `report` | Prints the final report. |
+
+Common cases:
+
+- Connect SonarCloud after skipping it: `scripts/setup_macos.sh --from sonar`
+- Continue without SonarCloud after its step failed: `scripts/setup_macos.sh --from sonar --no-sonar`
+- CI was still running when setup stopped waiting: `scripts/setup_macos.sh --from latch`
+
+With a fork, everything runs from inside `~/alan-factory`. With a private copy, if setup stops before it has created your copy, run `./setup.sh` again from the template checkout; once your copy exists, run the resume command from inside `~/alan-factory`.
 
 - A `copy-destination` refusal means something already sits at `~/alan-factory`. Move it away and run setup again.
 - A `template-clone` refusal means `scripts/setup_macos.sh` was run inside the template checkout. Use `./setup.sh` there instead.
