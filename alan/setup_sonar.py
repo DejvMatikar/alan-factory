@@ -26,6 +26,7 @@ RESUME_COMMAND = "scripts/setup_macos.sh --from sonar"
 EXIT_SKIPPED = 3
 
 _KEY_SHAPE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:-]*")
+_GITHUB_REPOSITORY_URL = re.compile(r"https://github\.com/([^/\s]+/[^/\s]+?)(?:\.git)?/?")
 _TOKEN_SHAPE = re.compile(r"[A-Za-z0-9_.-]{1,200}")
 
 INSTRUCTIONS_TEXT = "\n".join(
@@ -43,7 +44,8 @@ INSTRUCTIONS_TEXT = "\n".join(
         "  3. Create an analysis token the same way, as a different SonarCloud user than the admin",
         "     token's. It is stored as a GitHub Actions secret of this repository, so CI can send",
         "     analyses. A token from the same user is refused unless you re-run with",
-        "     --accept-sonar-user-token.",
+        "     --accept-sonar-user-token. That user must be a member of the organization and have",
+        "     Execute Analysis on the project: project > Administration > Permissions.",
         "Paste the admin token first, then the analysis token. Neither is shown, printed or passed",
         "on any command line.",
     ]
@@ -233,9 +235,13 @@ def _candidates(admin: str, organization: str, repo: str) -> list[str]:
 
 
 def _bound_repository(admin: str, key: str) -> str:
-    answer = _get(admin, "/api/alm_settings/get_binding", {"project": key}, _admin_rejected)
-    repository = _mapping(answer).get("repository")
-    return repository if isinstance(repository, str) else ""
+    answer = _get(admin, "/api/navigation/component", {"component": key}, _admin_rejected)
+    alm = _mapping(_mapping(answer).get("alm"))
+    url = alm.get("url")
+    if alm.get("key") != "github" or not isinstance(url, str):
+        return ""
+    matched = _GITHUB_REPOSITORY_URL.fullmatch(url)
+    return matched.group(1) if matched else ""
 
 
 def discover_project(admin: str, slug: str) -> SonarProject:

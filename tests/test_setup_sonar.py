@@ -158,7 +158,7 @@ def test_the_admin_token_finds_the_project_and_the_analysis_token_is_only_checke
         ("/api/users/current", admin),
         ("/api/organizations/search", admin),
         ("/api/projects/search", admin),
-        ("/api/alm_settings/get_binding", admin),
+        ("/api/navigation/component", admin),
         ("/api/settings/values", admin),
         ("/api/users/current", analysis),
     ]
