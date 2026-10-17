@@ -129,6 +129,16 @@ def git(repo: Path, *args: str) -> str:
     return result.stdout.strip()
 
 
+_NO_AUTO_MAINTENANCE = (
+    ("gc.auto", "0"), ("maintenance.auto", "false"), ("receive.autoGc", "false"),
+)
+
+
+def disable_auto_maintenance(repo: Path) -> None:
+    for key, value in _NO_AUTO_MAINTENANCE:
+        git(repo, "config", key, value)
+
+
 def commit(repo: Path, name: str, content: str = "content\n") -> str:
     target = repo / name
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -207,6 +217,8 @@ def init_pair(pair: RepoPair) -> None:
     subprocess.run(
         ["git", "init", "-q", "-b", "main", str(pair.clone)], check=True, capture_output=True
     )
+    disable_auto_maintenance(pair.bare)
+    disable_auto_maintenance(pair.clone)
     git(pair.clone, "remote", "add", "origin", str(pair.bare))
     commit(pair.clone, ".gitignore", "ignored.txt\nignored_dir/\n")
     commit(pair.clone, "tracked.txt")
@@ -219,6 +231,7 @@ def advance_origin(pair: RepoPair, name: str = "upstream.txt") -> str:
     subprocess.run(
         ["git", "clone", "-q", str(pair.bare), str(other)], check=True, capture_output=True
     )
+    disable_auto_maintenance(other)
     sha = commit(other, name)
     git(other, "push", "-q", "origin", "main")
     return sha
