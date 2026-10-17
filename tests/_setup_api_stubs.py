@@ -98,6 +98,7 @@ def _repo_body(world: World, slug: str) -> dict[str, Any]:
     policy = world.get("pr_policy", "collaborators_only")
     if policy is not None:
         body["pull_request_creation_policy"] = policy
+    body["has_issues"] = world.get("issues", True)
     return body
 
 
@@ -151,6 +152,14 @@ def _gh_read(world: World, endpoint: str) -> int:
     return 0
 
 
+def _gh_workflow(world: World) -> int:
+    if not world.get("workflows_enabled", True):
+        print("gh: Not Found (HTTP 404)", file=sys.stderr)
+        return 1
+    print("active")
+    return 0
+
+
 def _written_setting(endpoint: str, body: dict[str, Any]) -> str:
     analysis = body.get("security_and_analysis", {})
     if endpoint.endswith("/interaction-limits"):
@@ -161,6 +170,8 @@ def _written_setting(endpoint: str, body: dict[str, Any]) -> str:
         return "push_protection"
     if "pull_request_creation_policy" in body:
         return "pr_policy"
+    if "has_issues" in body:
+        return "issues"
     return "unknown"
 
 
@@ -173,6 +184,8 @@ def _apply_write(world: World, setting: str, body: dict[str, Any]) -> None:
         world.set("interaction_limit", body["limit"])
     if setting == "pr_policy" and world.get("pr_policy_sticks", True):
         world.set("pr_policy", body["pull_request_creation_policy"])
+    if setting == "issues":
+        world.set("issues", body["has_issues"])
 
 
 def _gh_write(world: World, rest: list[str]) -> int:
@@ -202,6 +215,8 @@ def gh_api(ctx: Any, args: list[str]) -> int:
         return _gh_identity(world)
     if rest[:1] == ["user"]:
         return _gh_user(ctx)
+    if rest[0].endswith("/actions/workflows/tests.yml"):
+        return _gh_workflow(world)
     return _gh_read(world, rest[0])
 
 

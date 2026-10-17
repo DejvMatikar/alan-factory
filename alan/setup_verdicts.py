@@ -152,6 +152,10 @@ def _pr_policy_row(repo: _Json) -> tuple[str, str, str]:
     return "pr_policy", "already" if held else "apply", ""
 
 
+def _issues_row(repo: _Json) -> tuple[str, str, str]:
+    return "issues", "already" if _dig(repo, "has_issues") is True else "apply", ""
+
+
 def harden_plan(args: list[str], text: str) -> _Verdict:
     repo = _load(text)
     if _dig(repo, "visibility") == "public":
@@ -159,6 +163,7 @@ def harden_plan(args: list[str], text: str) -> _Verdict:
     else:
         rows = _not_public_rows()
     rows.append(_pr_policy_row(repo))
+    rows.append(_issues_row(repo))
     return 0, [f"{setting} {state} {reason}".rstrip() for setting, state, reason in rows]
 
 
@@ -291,6 +296,14 @@ def _red_jobs(jobs: list[_Json]) -> list[str]:
     ]
 
 
+def run_progress(args: list[str], text: str) -> _Verdict:
+    del args
+    states = [_text(job.get("status")) for job in _jobs(_load(text))]
+    done, running = states.count("completed"), states.count("in_progress")
+    queued = len(states) - done - running
+    return 0, [f"{done} of {len(states)} jobs done, {running} running, {queued} queued"]
+
+
 def _gate_is_green(jobs: list[_Json]) -> bool:
     return any(
         _text(job.get("name")) == GATE_JOB and _text(job.get("conclusion")) == "success"
@@ -414,6 +427,7 @@ _COMMANDS: dict[str, Callable[[list[str], str], _Verdict]] = {
     "confirm": confirm,
     "run-newest": run_newest,
     "run-status": run_status,
+    "run-progress": run_progress,
     "sonar-evidence": sonar_evidence,
     "reviewer-distinct": reviewer_distinct,
     "readiness": readiness,

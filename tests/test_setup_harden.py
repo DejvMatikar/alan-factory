@@ -97,7 +97,7 @@ def test_a_bound_copy_with_every_setting_in_place_is_left_alone(tmp_path: Path) 
     run = _harden(_ready(tmp_path), Scenario())
     assert run.returncode == 0, run.output
     assert mutating_calls(run) == []
-    assert run.stdout.count("[already]") == 4
+    assert run.stdout.count("[already]") == 6
 
 
 @pytest.mark.parametrize("visibility", ["private", "internal"])
@@ -244,3 +244,40 @@ def test_the_step_needs_the_running_service_to_learn_which_repository_it_binds(
     assert run.returncode == 1
     assert "refused at harden: local-api:" in run.stderr
     assert run.called("gh", "api") == []
+
+
+def test_a_fork_with_issues_off_gets_them_turned_on_and_read_back(tmp_path: Path) -> None:
+    sandbox = _ready(tmp_path)
+    run = _harden(sandbox, Scenario(issues=False))
+    assert run.returncode == 0, run.output
+    assert _writes(sandbox) == [("PATCH", REPO_ENDPOINT, {"has_issues": True})]
+    assert "[done] issues turned on set and read back" in run.stdout
+    assert "harden" in _marks(sandbox)
+
+
+def test_issues_already_on_are_reported_without_a_write(tmp_path: Path) -> None:
+    sandbox = _ready(tmp_path)
+    run = _harden(sandbox, Scenario())
+    assert run.returncode == 0, run.output
+    assert _writes(sandbox) == []
+    assert "[already] issues turned on" in run.stdout
+
+
+def test_a_fork_with_its_workflows_off_fails_harden_with_the_actions_tab_instruction(
+    tmp_path: Path,
+) -> None:
+    sandbox = _ready(tmp_path)
+    run = _harden(sandbox, Scenario(workflows_enabled=False))
+    assert run.returncode != 0
+    assert f"https://github.com/{ENGINE_SLUG}/actions" in run.stdout
+    assert "I understand my workflows, go ahead and enable them" in run.stdout
+    assert f"GitHub Actions workflows are off for {ENGINE_SLUG}" in run.output
+    assert RESUME_HARDEN in run.output
+    assert "harden" not in _marks(sandbox)
+
+
+def test_enabled_workflows_are_reported_without_a_write(tmp_path: Path) -> None:
+    sandbox = _ready(tmp_path)
+    run = _harden(sandbox, Scenario())
+    assert run.returncode == 0, run.output
+    assert "[already] GitHub Actions runs tests.yml" in run.stdout

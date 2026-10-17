@@ -97,7 +97,7 @@ def test_the_closing_line_says_alan_is_up_and_no_longer_lists_the_repository_bin
 ) -> None:
     _, run = fresh
     closing = run.stdout.strip().splitlines()[-2:]
-    assert "alan is up" in closing[0]
+    assert "alan-factory is up" in closing[0]
     assert "not ready to dispatch" in closing[0]
     assert "P1.9b" not in closing[1]
     assert "binding" not in closing[1]
@@ -152,7 +152,7 @@ def test_the_installed_profile_resolves_through_the_service_validator(
     resolved = default_profile.resolve(sandbox.alan_dir / "engines", tmp_path / "absent.yaml")
     assert resolved.source is Source.profile
     assert resolved.identity_fields() == {"owner": OWNER, "repo": REPO}
-    assert resolved.profile.posture is Posture.propose
+    assert resolved.profile.posture is Posture.autonomous
     assert resolved.profile.authoritative_check_apps == {"gate": 15368}
 
 
@@ -502,7 +502,7 @@ def test_a_profile_for_a_different_repo_is_refused_and_left_byte_identical(
 def test_a_drifted_profile_for_this_repo_is_kept_with_a_warning(tmp_path: Path) -> None:
     sandbox = _built(tmp_path)
     assert run_setup(sandbox, "--only", "profile").returncode == 0
-    drifted = sandbox.profile_file.read_text(encoding="utf-8").replace("propose", "autonomous")
+    drifted = sandbox.profile_file.read_text(encoding="utf-8").replace("autonomous", "propose")
     sandbox.profile_file.write_text(drifted, encoding="utf-8")
     before = snapshot_files(sandbox.profile_file)
     run = run_setup(sandbox, "--only", "profile")
@@ -639,6 +639,6 @@ def test_only_runs_exactly_the_named_step_and_does_not_claim_alan_is_up(tmp_path
     run = run_setup(sandbox, "--only", "preflight")
     assert run.returncode == 0, run.output
     assert run.headers() == ["preflight"]
-    assert "did not start alan" in run.stdout
-    assert "alan is up" not in run.stdout
+    assert "did not start alan-factory" in run.stdout
+    assert "alan-factory is up" not in run.stdout
     assert sandbox.state_file.read_text(encoding="utf-8").splitlines() == ["preflight"]

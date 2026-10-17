@@ -480,3 +480,25 @@ def test_the_ci_steps_never_put_a_token_or_the_bots_login_on_a_command_line(
     assert run.returncode == 0, run.output
     assert_no_secret(run, "planted-value")
     assert stub_log(sandbox, "gh_writes.jsonl") == []
+
+
+def test_the_wait_names_the_run_and_prints_its_progress_once_while_it_is_unchanged(
+    tmp_path: Path,
+) -> None:
+    sandbox = _ready(tmp_path)
+    _seed(sandbox, done_after=STILL_RUNNING)
+    run = _latch(sandbox)
+    assert f"[info] waiting for CI run {FIRST_RUN_ID} (up to" in run.stdout
+    assert run_url(ENGINE_SLUG, FIRST_RUN_ID) in run.stdout
+    progress = f"[wait] CI run {FIRST_RUN_ID}: 0 of 3 jobs done, 3 running, 0 queued (0 min so far)"
+    assert run.stdout.count(progress) == 1
+    assert run.stdout.count("[wait]") == 1
+
+
+def test_a_green_run_still_waiting_for_sonarcloud_says_so_once(tmp_path: Path) -> None:
+    sandbox = _ready(tmp_path)
+    _seed(sandbox)
+    run = _latch(sandbox, Scenario(sonar_evidence_after_reads=2))
+    assert run.returncode == 0, run.output
+    waiting = f"[wait] CI run {FIRST_RUN_ID}: CI is green; waiting for SonarCloud to report"
+    assert run.stdout.count(waiting) == 1

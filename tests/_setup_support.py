@@ -172,6 +172,8 @@ class Scenario:
     interaction_limit: str | None = "collaborators_only"
     pr_policy: str | None = "collaborators_only"
     pr_policy_sticks: bool = True
+    issues: bool = True
+    workflows_enabled: bool = True
     repo_read_fails: bool = False
     limits_read_fails: bool = False
     writes_fail: tuple[str, ...] = ()

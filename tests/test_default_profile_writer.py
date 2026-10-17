@@ -66,7 +66,7 @@ def test_a_written_profile_resolves_to_the_users_copy_as_the_installed_profile(
 
 
 _EXPECTED_FIELDS: list[tuple[str, Any]] = [
-    ("posture", Posture.propose),
+    ("posture", Posture.autonomous),
     ("authoritative_checks", frozenset({"gate"})),
     ("authoritative_check_apps", {"gate": 15368}),
     ("enforce_admins", True),
@@ -111,7 +111,7 @@ def test_the_resolved_engine_fields_name_the_main_ci_workflow_and_no_code_qualit
     fields = _resolved(tmp_path).engine_fields()
     assert fields["ci"] == {"main_ci_workflow": "tests.yml", "deploy_workflow": None}
     assert fields["code_quality"] is None
-    assert fields["posture"] is Posture.propose
+    assert fields["posture"] is Posture.autonomous
     assert fields["dependency_sweep"] == {"enabled": False, "enable_python_vuln_scan": False}
 
 
@@ -284,7 +284,7 @@ def test_an_extra_code_quality_requirement_does_not_hide_another_drifted_field(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     _install_with(
-        tmp_path, requirements=["reviewer_credential", "code_quality"], posture="autonomous"
+        tmp_path, requirements=["reviewer_credential", "code_quality"], posture="propose"
     )
     before = _snapshot(_installed(tmp_path))
     assert _write(tmp_path) is WriteOutcome.kept
@@ -310,7 +310,7 @@ def test_a_drifted_profile_for_the_same_repo_is_kept_and_its_fields_are_named(
 ) -> None:
     _write(tmp_path)
     loaded = yaml.safe_load(_installed(tmp_path).read_text(encoding="utf-8"))
-    loaded["posture"] = "autonomous"
+    loaded["posture"] = "propose"
     loaded["enforce_admins"] = False
     _installed(tmp_path).write_text(yaml.safe_dump(loaded), encoding="utf-8")
     _age(_installed(tmp_path))

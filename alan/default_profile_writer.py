@@ -44,7 +44,7 @@ def build_profile(owner: str, repo: str) -> DefaultProfile:
         return DefaultProfile(
             owner=owner,
             repo=repo,
-            posture=Posture.propose,
+            posture=Posture.autonomous,
             authoritative_checks=frozenset({GATE_CHECK}),
             authoritative_check_apps={GATE_CHECK: GATE_APP_ID},
             enforce_admins=True,

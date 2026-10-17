@@ -63,10 +63,14 @@ def _identity(ctx: Any, token: str) -> tuple[int, Any]:
 
 def _binding(ctx: Any, project: str) -> tuple[int, Any]:
     if project in _bound_keys(ctx):
-        return 200, {"repository": ctx.flag("secret_engine", "")}
+        return 200, _alm(ctx.flag("secret_engine", ""))
     if project in _unbound_keys(ctx):
-        return 200, {"repository": UNBOUND_REPOSITORY}
+        return 200, _alm(UNBOUND_REPOSITORY)
     return 404, {}
+
+
+def _alm(repository: str) -> dict[str, Any]:
+    return {"alm": {"key": "github", "url": f"https://github.com/{repository}"}}
 
 
 def _settings(ctx: Any, query: dict[str, str]) -> tuple[int, Any]:
@@ -83,8 +87,8 @@ def _admin_answer(ctx: Any, path: str, query: dict[str, str]) -> tuple[int, Any]
         keys = [*_bound_keys(ctx), *_unbound_keys(ctx)]
         listed = keys if query.get("organization") == organization else []
         return 200, {"components": [{"key": key} for key in listed]}
-    if path == "/api/alm_settings/get_binding":
-        return _binding(ctx, query.get("project", ""))
+    if path == "/api/navigation/component":
+        return _binding(ctx, query.get("component", ""))
     if path == "/api/settings/values":
         return _settings(ctx, query)
     return 404, {}

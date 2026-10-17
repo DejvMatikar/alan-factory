@@ -119,6 +119,7 @@ def _repo(visibility: str = "public", **fields: object) -> str:
         "visibility": visibility,
         "security_and_analysis": analysis,
         "pull_request_creation_policy": "collaborators_only",
+        "has_issues": True,
     }
     return json.dumps({**body, **fields})
 
@@ -145,6 +146,7 @@ def test_a_bound_public_copy_needs_nothing(tmp_path: Path) -> None:
         "push_protection": ("already", ""),
         "interaction_limits": ("already", ""),
         "pr_policy": ("already", ""),
+        "issues": ("already", ""),
     }
 
 
@@ -402,3 +404,30 @@ def test_main_reads_the_process_arguments_when_none_are_given(
     monkeypatch.setattr(sys, "stdin", io.StringIO('{"visibility": "private"}'))
     assert sv.main() == 0
     assert capsys.readouterr().out == "private\n"
+
+
+@pytest.mark.parametrize("visibility", ["public", "private"])
+@pytest.mark.parametrize("has_issues", [False, None, "true"])
+def test_issues_are_applied_on_every_copy_unless_github_reports_them_on(
+    tmp_path: Path, visibility: str, has_issues: object
+) -> None:
+    _, lines = sv.harden_plan(_limits(tmp_path, {}), _repo(visibility, has_issues=has_issues))
+    assert _plan(lines)["issues"] == ("apply", "")
+
+
+def test_run_progress_counts_done_running_and_queued_jobs() -> None:
+    jobs = [
+        {"name": "lint", "status": "completed", "conclusion": "success"},
+        {"name": "tests", "status": "in_progress"},
+        {"name": "audit", "status": "queued"},
+        {"name": "e2e", "status": "waiting"},
+    ]
+    code, lines = sv.run_progress([], json.dumps({"status": "in_progress", "jobs": jobs}))
+    assert code == 0
+    assert lines == ["1 of 4 jobs done, 1 running, 2 queued"]
+
+
+def test_run_progress_of_a_run_without_jobs_reports_zero_of_zero() -> None:
+    assert sv.run_progress([], json.dumps({"status": "queued"}))[1] == [
+        "0 of 0 jobs done, 0 running, 0 queued"
+    ]

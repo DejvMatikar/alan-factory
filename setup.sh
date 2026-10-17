@@ -149,6 +149,9 @@ clone_with_retry() {
 step_copy() {
   resolve_copy_owner
   COPY_SLUG="$COPY_OWNER/${TEMPLATE_SLUG#*/}"
+  if [ "$(lower "$COPY_SLUG")" = "$(lower "$TEMPLATE_SLUG")" ]; then
+    refuse copy-is-template "your copy would be $COPY_SLUG, which is the template itself; sign in to gh as a different account or pass --owner <org>"
+  fi
   COPY_DEST="$HOME/${TEMPLATE_SLUG#*/}"
   if copy_is_present; then
     note already "your copy $COPY_SLUG is cloned"
@@ -176,7 +179,7 @@ hand_over() {
   fi
   say ""
   say "handing over to the setup script inside your new clone, from step $next onward"
-  exec /bin/bash "$entry" --from "$next" ${OWNER_ARG:+--owner "$OWNER_ARG"} $session_flag $sonar_flag $no_sonar_flag
+  SETUP_HANDED_OVER=1 exec /bin/bash "$entry" --from "$next" ${OWNER_ARG:+--owner "$OWNER_ARG"} $session_flag $sonar_flag $no_sonar_flag
 }
 
 after_step() {

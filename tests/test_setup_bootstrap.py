@@ -352,7 +352,7 @@ def test_only_copy_creates_the_copy_without_handing_over(tmp_path: Path) -> None
     assert run.returncode == 0, run.output
     assert run.headers() == ["copy"]
     assert sandbox.handover_args() is None
-    assert "did not start alan" in run.stdout
+    assert "did not start alan-factory" in run.stdout
     assert _copy_dest(sandbox).is_dir()
 
 
@@ -373,6 +373,19 @@ def test_an_unknown_signed_in_user_without_an_owner_flag_refuses_the_copy(tmp_pa
     assert run.returncode == 1
     assert "refused at copy: copy-owner:" in run.stderr
     assert _gh_writes(run) == []
+
+
+@pytest.mark.parametrize("template", ["example-owner/template-repo", "Example-Owner/Template-Repo"])
+def test_a_copy_that_would_be_the_template_itself_is_refused_before_any_write(
+    tmp_path: Path, template: str
+) -> None:
+    sandbox = make_sandbox(tmp_path)
+    run = _bootstrap(sandbox, "--template", template)
+    assert run.returncode == 1
+    assert "refused at copy: copy-is-template:" in run.stderr
+    assert "--owner <org>" in run.stderr
+    assert _gh_writes(run) == []
+    assert not _copy_dest(sandbox).exists()
 
 
 def test_a_clone_without_a_setup_script_cannot_be_handed_over_to(tmp_path: Path) -> None:
@@ -412,3 +425,22 @@ def test_a_leftover_clone_without_a_head_is_replaced_by_a_fresh_one(tmp_path: Pa
     assert run.returncode == 0, run.output
     assert len(run.called("gh", "repo", "clone")) == 1
     assert sandbox.handover_args() == ["--from", "build"]
+
+
+def test_the_handover_tells_the_new_clone_not_to_print_the_checklist_again(
+    tmp_path: Path,
+) -> None:
+    sandbox = make_sandbox(tmp_path)
+    run = _bootstrap(sandbox, "--template", TEMPLATE)
+    assert run.returncode == 0, run.output
+    assert run.stdout.count("what will run, and what only you can do") == 1
+    handed = (sandbox.stub_root / "handover.env").read_text(encoding="utf-8").strip()
+    assert handed == "1"
+
+
+def test_a_handed_over_run_skips_the_checklist_and_still_runs_its_steps(tmp_path: Path) -> None:
+    sandbox = make_sandbox(tmp_path)
+    run = run_setup(sandbox, "--only", "preflight", extra_env={"SETUP_HANDED_OVER": "1"})
+    assert run.returncode == 0, run.output
+    assert "what will run, and what only you can do" not in run.stdout
+    assert run.headers() == ["preflight"]

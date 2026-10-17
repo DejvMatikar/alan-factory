@@ -26,6 +26,7 @@ RESUME_COMMAND = "scripts/setup_macos.sh --from sonar"
 EXIT_SKIPPED = 3
 
 _KEY_SHAPE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:-]*")
+_GITHUB_REPOSITORY_URL = re.compile(r"https://github\.com/([^/\s]+/[^/\s]+?)(?:\.git)?/?")
 _TOKEN_SHAPE = re.compile(r"[A-Za-z0-9_.-]{1,200}")
 
 INSTRUCTIONS_TEXT = "\n".join(
@@ -33,16 +34,18 @@ INSTRUCTIONS_TEXT = "\n".join(
         "SonarCloud reviews every pull request for code quality. It advises; it never blocks a",
         "merge. It is optional: press Enter at the admin token prompt to skip it now and connect",
         "it later. Before you paste anything:",
-        "  1. Sign in at https://sonarcloud.io with GitHub and import this repository as a project",
-        "     (Analyze new project). Import it once: setup refuses several projects for one",
+        "  1. Sign in at https://sonarcloud.io (now named SonarQube Cloud) with GitHub and import",
+        "     this repository: + (top right) > Analyze new project > your organization > tick the",
+        "     repository > Set Up. Import it once: setup refuses several projects for one",
         "     repository.",
-        "  2. Create an admin token: SonarCloud > My Account > Security > Generate Tokens, as a",
-        "     user who administers the organization. Setup uses it only to find your project and",
-        "     to read the project's analysis settings; it is never stored.",
+        "  2. Create an admin token: your avatar > My account > Access Tokens > Personal Tokens >",
+        "     Generate Token, as a user who administers the organization. Setup uses it only to",
+        "     find your project and to read the project's analysis settings; it is never stored.",
         "  3. Create an analysis token the same way, as a different SonarCloud user than the admin",
         "     token's. It is stored as a GitHub Actions secret of this repository, so CI can send",
         "     analyses. A token from the same user is refused unless you re-run with",
-        "     --accept-sonar-user-token.",
+        "     --accept-sonar-user-token. That user must be a member of the organization and have",
+        "     Execute Analysis on the project: project > Administration > Permissions.",
         "Paste the admin token first, then the analysis token. Neither is shown, printed or passed",
         "on any command line.",
     ]
@@ -57,12 +60,12 @@ RISK_TEXT = "\n".join(
     ]
 )
 ADMIN_REJECTED_INSTRUCTION = (
-    "In your browser: open https://sonarcloud.io, go to My Account > Security, generate a new "
+    "In your browser: open https://sonarcloud.io, go to My account > Access Tokens, generate a new "
     "token as a user who administers the organization, then re-run "
     f"{RESUME_COMMAND}."
 )
 NO_PROJECT_INSTRUCTION = (
-    "In your browser: open https://sonarcloud.io, choose Analyze new project, import this "
+    "In your browser: open https://sonarcloud.io, choose + > Analyze new project, import this "
     f"repository into your organization, then re-run {RESUME_COMMAND}."
 )
 SEVERAL_PROJECTS_INSTRUCTION = (
@@ -232,9 +235,13 @@ def _candidates(admin: str, organization: str, repo: str) -> list[str]:
 
 
 def _bound_repository(admin: str, key: str) -> str:
-    answer = _get(admin, "/api/alm_settings/get_binding", {"project": key}, _admin_rejected)
-    repository = _mapping(answer).get("repository")
-    return repository if isinstance(repository, str) else ""
+    answer = _get(admin, "/api/navigation/component", {"component": key}, _admin_rejected)
+    alm = _mapping(_mapping(answer).get("alm"))
+    url = alm.get("url")
+    if alm.get("key") != "github" or not isinstance(url, str):
+        return ""
+    matched = _GITHUB_REPOSITORY_URL.fullmatch(url)
+    return matched.group(1) if matched else ""
 
 
 def discover_project(admin: str, slug: str) -> SonarProject:

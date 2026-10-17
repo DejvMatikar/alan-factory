@@ -26,7 +26,7 @@ TYPED = f"{ADMIN}\n{ANALYSIS}\n"
 ADMIN_PATHS = (
     "/api/organizations/search",
     "/api/projects/search",
-    "/api/alm_settings/get_binding",
+    "/api/navigation/component",
     "/api/settings/values",
 )
 
@@ -98,8 +98,9 @@ class World:
         if path == "/api/projects/search":
             keys = self.candidates.get(query["organization"], [])
             return {"components": [{"key": key} for key in keys]}
-        if path == "/api/alm_settings/get_binding":
-            return {"repository": self.bindings.get(query["project"], "")}
+        if path == "/api/navigation/component":
+            bound = self.bindings.get(query["component"], "")
+            return {"alm": {"key": "github", "url": f"https://github.com/{bound}"}} if bound else {}
         rows = [] if self.autoscan is None else [{"key": query["keys"], "value": self.autoscan}]
         return {"settings": rows}
 
@@ -324,7 +325,7 @@ def test_only_organizations_projects_and_bindings_are_read_for_discovery(
         "/api/users/current",
         "/api/organizations/search",
         "/api/projects/search",
-        "/api/alm_settings/get_binding",
+        "/api/navigation/component",
         "/api/settings/values",
         "/api/users/current",
     ]
@@ -387,14 +388,35 @@ def test_a_key_with_characters_setup_cannot_pass_on_is_never_used(world: World) 
     assert setup_sonar.discover_project(ADMIN, SLUG).key == KEY
 
 
-def test_a_binding_answer_without_a_repository_is_not_a_match(world: World) -> None:
-    world.forced["/api/alm_settings/get_binding"] = (200, {"repository": 5})
+@pytest.mark.parametrize(
+    "alm",
+    [
+        {"key": "github", "url": 5},
+        {"key": "gitlab", "url": f"https://github.com/{SLUG}"},
+        {"key": "github", "url": f"https://example.com/{SLUG}"},
+        {"key": "github", "url": f"https://github.com/{SLUG}/tree/main"},
+        "not-a-mapping",
+    ],
+)
+def test_a_binding_answer_that_names_no_github_repository_is_not_a_match(
+    world: World, alm: object
+) -> None:
+    world.forced["/api/navigation/component"] = (200, {"alm": alm})
     with pytest.raises(setup_sonar.SonarRefused, match="no SonarCloud project"):
         setup_sonar.discover_project(ADMIN, SLUG)
 
 
+@pytest.mark.parametrize("suffix", ["", "/", ".git", ".git/"])
+def test_a_github_binding_url_names_the_repository_with_or_without_a_suffix(
+    world: World, suffix: str
+) -> None:
+    url = f"https://github.com/{SLUG}{suffix}"
+    world.forced["/api/navigation/component"] = (200, {"alm": {"key": "github", "url": url}})
+    assert setup_sonar.discover_project(ADMIN, SLUG).key == KEY
+
+
 def test_an_unbound_project_answers_404_and_is_not_a_match(world: World) -> None:
-    world.forced["/api/alm_settings/get_binding"] = (404, {})
+    world.forced["/api/navigation/component"] = (404, {})
     with pytest.raises(setup_sonar.SonarRefused, match="no SonarCloud project"):
         setup_sonar.discover_project(ADMIN, SLUG)
 

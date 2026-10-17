@@ -45,6 +45,7 @@ HANDOVER_SCRIPT = (
     "#!/bin/bash\n"
     'printf \'%s\\n\' "$@" > "$SETUP_STUB_ROOT/handover.args"\n'
     'printf \'%s\\n\' "$0" > "$SETUP_STUB_ROOT/handover.entry"\n'
+    'printf \'%s\\n\' "${SETUP_HANDED_OVER:-}" > "$SETUP_STUB_ROOT/handover.env"\n'
 )
 _GIT_IDENTITY = (
     "-c",
