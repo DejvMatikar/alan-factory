@@ -1,0 +1,447 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1404" width="1280" height="1404" role="img" aria-labelledby="t d">
+  <title id="t">alan-factory architecture</title>
+  <desc id="d">What you set up once (your Mac, two GitHub accounts, Claude Code, two SonarCloud users, Copilot review) and two flows: the build flow from a chat through the brief, planning, a split into two pull requests, review, feedback-driven fix rounds, automatic merge and self-update deploy, and the read-only explore flow from a consultant chat through the brief to a report.</desc>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .h1 { font-size: 28px; font-weight: 700; }
+    .h1s { font-size: 28px; font-weight: 400; fill: #656d76; }
+    .sub { font-size: 14px; fill: #656d76; }
+    .sec { font-size: 15px; font-weight: 700; }
+    .secn { font-size: 12px; fill: #656d76; }
+    .kick { font-size: 9.5px; font-weight: 700; letter-spacing: .6px; fill: #656d76; }
+    .ctitle { font-size: 14px; font-weight: 700; }
+    .body { font-size: 11.5px; fill: #57606a; }
+    .team { font-size: 13px; font-weight: 700; }
+    .chipt { font-size: 12px; font-weight: 700; }
+    .chips { font-size: 10.5px; fill: #57606a; }
+    .lbl { font-size: 10px; font-weight: 700; letter-spacing: .3px; }
+    .badge { font-size: 9.5px; font-weight: 700; fill: #fff; }
+    .card { fill: #ffffff; stroke: #d0d7de; stroke-width: 1; }
+    .box { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.2; }
+    .flow { stroke: #57606a; stroke-width: 1.8; fill: none; }
+    .tick { stroke: #8c959f; stroke-width: 1.2; stroke-dasharray: 2 3; fill: none; }
+  </style>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#57606a"/></marker>
+    <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bc4c00"/></marker>
+    <marker id="ahp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8250df"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker>
+
+    <symbol id="i-mac" viewBox="-15 -15 30 30"><circle r="15" fill="#24292f"/><rect x="-8" y="-7" width="16" height="10.5" rx="1.5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M-10.5,6.5 H10.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-owner" viewBox="-15 -15 30 30"><circle r="15" fill="#0969da"/><circle cy="-3.5" r="4" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M-7,8 A7,6.5 0 0 1 7,8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-bot" viewBox="-15 -15 30 30"><circle r="15" fill="#8250df"/><rect x="-7.5" y="-4.5" width="15" height="11" rx="3" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="-3" cy="1" r="1.4" fill="#fff"/><circle cx="3" cy="1" r="1.4" fill="#fff"/><path d="M0,-4.5 V-8" stroke="#fff" stroke-width="1.6"/><circle cy="-9" r="1.4" fill="#fff"/></symbol>
+    <symbol id="i-claude" viewBox="-15 -15 30 30"><circle r="15" fill="#d97757"/><g stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M0,-7.5 V7.5"/><path d="M-7.5,0 H7.5"/><path d="M-5.3,-5.3 L5.3,5.3"/><path d="M-5.3,5.3 L5.3,-5.3"/></g></symbol>
+    <symbol id="i-sonar" viewBox="-15 -15 30 30"><circle r="15" fill="#bf3989"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M-7,2 A5,5 0 0 1 -2,7"/><path d="M-7,-2 A9,9 0 0 1 2,7"/><path d="M-7,-6 A13,13 0 0 1 6,7"/></g></symbol>
+    <symbol id="i-copilot" viewBox="-15 -15 30 30"><circle r="15" fill="#0e8a6b"/><g fill="none" stroke="#fff" stroke-width="1.8"><rect x="-9" y="-5" width="7.5" height="7" rx="3"/><rect x="1.5" y="-5" width="7.5" height="7" rx="3"/><path d="M-1.5,-1.5 H1.5"/><path d="M-5,6 Q0,9 5,6" stroke-linecap="round"/></g></symbol>
+    <symbol id="i-step" viewBox="-15 -15 30 30"><circle r="15" fill="#57606a"/><path d="M-5.5,0.5 L-1.5,4.5 L6,-4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pr" viewBox="-15 -15 30 30"><circle r="15" fill="#24292f"/><g fill="none" stroke="#fff" stroke-width="1.7"><circle cx="-5" cy="-6" r="2.2"/><circle cx="-5" cy="6" r="2.2"/><circle cx="5" cy="6" r="2.2"/><path d="M-5,-3.8 V3.8"/><path d="M5,3.8 V-2.5 Q5,-6 1.5,-6 H-0.5"/></g></symbol>
+    <symbol id="i-alan" viewBox="-15 -15 30 30"><circle r="15" fill="#ffffff"/><text x="0" y="5.5" text-anchor="middle" style="font-size:16px;font-weight:800;fill:#1f2328">A</text></symbol>
+    <symbol id="i-doc" viewBox="-15 -15 30 30"><circle r="15" fill="#24292f"/><path d="M-5,-8 H2 L6,-4 V8 H-5 Z" fill="none" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/><path d="M-2,-1 H3 M-2,3 H3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  </defs>
+
+  <!-- canvas -->
+  <rect x="0.5" y="0.5" width="1279" height="1403" rx="18" fill="#ffffff" stroke="#d0d7de"/>
+
+  <!-- header -->
+  <text x="40" y="56"><tspan class="h1">alan-factory</tspan><tspan class="h1s"> · how it works</tspan></text>
+  <text x="40" y="82" class="sub">Two ways in: Explore to research and think a question through, or Build to change the code. Alan's agent teams do the rest, unattended.</text>
+
+  <!-- ① setup -->
+  <text x="40" y="118" class="sec">① What you set up once</text>
+  <text x="222" y="118" class="secn">./setup.sh walks you through each of these</text>
+
+  <!-- card 1: Mac -->
+  <g>
+    <rect x="40" y="130" width="162" height="112" rx="10" class="card"/>
+    <rect x="40" y="130" width="162" height="5" rx="2.5" fill="#24292f"/>
+    <use href="#i-mac" x="52" y="146" width="30" height="30"/>
+    <text x="90" y="157" class="kick">YOUR MAC</text>
+    <text x="90" y="174" class="ctitle">alan-factory</text>
+    <text x="52" y="198" class="body">service on :8585</text>
+    <text x="52" y="214" class="body">web UI · Alan · workers</text>
+    <text x="52" y="230" class="body">+ self-updater</text>
+  </g>
+  <!-- card 2: GitHub #1 -->
+  <g>
+    <rect x="213" y="130" width="162" height="112" rx="10" class="card"/>
+    <rect x="213" y="130" width="162" height="5" rx="2.5" fill="#0969da"/>
+    <use href="#i-owner" x="225" y="146" width="30" height="30"/>
+    <text x="263" y="157" class="kick">GITHUB #1</text>
+    <text x="263" y="174" class="ctitle">You (owner)</text>
+    <text x="225" y="198" class="body">owns your fork / copy</text>
+    <text x="225" y="214" class="body">fine-grained token</text>
+    <text x="225" y="230" class="body">pushes, opens, merges</text>
+  </g>
+  <!-- card 3: GitHub #2 -->
+  <g>
+    <rect x="386" y="130" width="162" height="112" rx="10" class="card"/>
+    <rect x="386" y="130" width="162" height="5" rx="2.5" fill="#8250df"/>
+    <use href="#i-bot" x="398" y="146" width="30" height="30"/>
+    <text x="436" y="157" class="kick">GITHUB #2</text>
+    <text x="436" y="174" class="ctitle">Verifier bot</text>
+    <text x="398" y="198" class="body">write collaborator</text>
+    <text x="398" y="214" class="body">classic token</text>
+    <text x="398" y="230" class="body">posts PR reviews</text>
+  </g>
+  <!-- card 4: Claude -->
+  <g>
+    <rect x="559" y="130" width="162" height="112" rx="10" class="card"/>
+    <rect x="559" y="130" width="162" height="5" rx="2.5" fill="#d97757"/>
+    <use href="#i-claude" x="571" y="146" width="30" height="30"/>
+    <text x="609" y="157" class="kick">ANTHROPIC</text>
+    <text x="609" y="174" class="ctitle">Claude Code</text>
+    <text x="571" y="198" class="body">API key recommended</text>
+    <text x="571" y="214" class="body">powers every agent as</text>
+    <text x="571" y="230" class="body">a headless claude worker</text>
+  </g>
+  <!-- card 5: Sonar admin -->
+  <g>
+    <rect x="732" y="130" width="162" height="112" rx="10" class="card"/>
+    <rect x="732" y="130" width="162" height="5" rx="2.5" fill="#bf3989"/>
+    <use href="#i-sonar" x="744" y="146" width="30" height="30"/>
+    <text x="782" y="157" class="kick">SONARCLOUD #1</text>
+    <text x="782" y="174" class="ctitle">Admin user</text>
+    <text x="744" y="198" class="body">admin token</text>
+    <text x="744" y="214" class="body">used by setup only</text>
+    <text x="744" y="230" class="body">never stored</text>
+  </g>
+  <!-- card 6: Sonar analysis -->
+  <g>
+    <rect x="905" y="130" width="162" height="112" rx="10" class="card"/>
+    <rect x="905" y="130" width="162" height="5" rx="2.5" fill="#bf3989"/>
+    <use href="#i-sonar" x="917" y="146" width="30" height="30"/>
+    <text x="955" y="157" class="kick">SONARCLOUD #2</text>
+    <text x="955" y="174" class="ctitle">Analysis user</text>
+    <text x="917" y="198" class="body">analysis token →</text>
+    <text x="917" y="214" class="body">GitHub Actions secret</text>
+    <text x="917" y="230" class="body">optional · advisory</text>
+  </g>
+  <!-- card 7: Copilot -->
+  <g>
+    <rect x="1078" y="130" width="162" height="112" rx="10" class="card"/>
+    <rect x="1078" y="130" width="162" height="5" rx="2.5" fill="#0e8a6b"/>
+    <use href="#i-copilot" x="1090" y="146" width="30" height="30"/>
+    <text x="1128" y="157" class="kick">GITHUB COPILOT</text>
+    <text x="1128" y="174" class="ctitle">Code review</text>
+    <text x="1090" y="198" class="body">reviews every PR</text>
+    <text x="1090" y="214" class="body">its comments must be</text>
+    <text x="1090" y="230" class="body">resolved before merge</text>
+  </g>
+
+  <!-- Alan bar -->
+  <rect x="40" y="268" width="1200" height="48" rx="10" fill="#1f2328"/>
+  <use href="#i-alan" x="54" y="277" width="30" height="30"/>
+  <text x="94" y="297" style="font-size:17px;font-weight:800;fill:#ffffff">Alan</text>
+  <text x="140" y="297" style="font-size:12px;fill:#afb8c1">dispatcher + router</text>
+  <text x="270" y="297" style="font-size:12px;fill:#d0d7de">runs every team in both flows below · queues jobs · passes typed handovers between teams · parks and asks you when blocked</text>
+
+  <!-- ② build flow -->
+  <text x="40" y="350" class="sec">② Build flow</text>
+  <text x="142" y="350" class="secn">changes your code · everything after Dispatch runs on its own at the default posture “autonomous”</text>
+  <g>
+    <rect x="40" y="364" width="250" height="100" rx="10" fill="#ddf4ff" stroke="#54aeff" stroke-width="1.2"/>
+    <use href="#i-owner" x="52" y="376" width="24" height="24"/>
+    <text x="84" y="393" class="team">Build chat</text>
+    <text x="52" y="421" class="body">You describe the change you want</text>
+    <text x="52" y="437" class="body">in the web UI and talk it through</text>
+  </g>
+  <path d="M290,414 H328" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="330" y="364" width="260" height="100" rx="10" fill="#ddf4ff" stroke="#54aeff" stroke-width="1.2"/>
+    <use href="#i-doc" x="342" y="376" width="24" height="24"/>
+    <text x="374" y="393" class="team">Brief</text>
+    <text x="342" y="421" class="body">Summarize turns the chat into a</text>
+    <text x="342" y="437" class="body">brief; you review and edit it, then</text>
+    <text x="342" y="453" class="body" style="font-weight:700;fill:#1f2328">click Dispatch</text>
+  </g>
+  <path d="M590,414 H628" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="630" y="364" width="260" height="100" rx="10" class="box"/>
+    <use href="#i-claude" x="642" y="376" width="24" height="24"/>
+    <text x="674" y="393" class="team mono">brief_refine</text>
+    <text x="642" y="421" class="body">first agent after Dispatch, automatic:</text>
+    <text x="642" y="437" class="body">sorts the brief into requirements</text>
+    <text x="642" y="453" class="body">and assumptions, never asks you</text>
+  </g>
+  <path d="M890,414 H928" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="930" y="364" width="310" height="100" rx="10" class="box"/>
+    <use href="#i-claude" x="942" y="376" width="24" height="24"/>
+    <text x="974" y="393" class="team mono">implementation_plan</text>
+    <text x="942" y="421" class="body">writes the plan, the acceptance clauses</text>
+    <text x="942" y="437" class="body">and the test scenarios the PR will be</text>
+    <text x="942" y="453" class="body">checked against</text>
+  </g>
+  <path d="M1085,464 V482 H145 V498" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="40" y="500" width="210" height="160" rx="10" class="box"/>
+    <use href="#i-claude" x="52" y="512" width="24" height="24"/>
+    <text x="84" y="529" class="team mono">decomposer</text>
+    <text x="52" y="557" class="body">decides before any code is</text>
+    <text x="52" y="573" class="body">written: keep the task whole,</text>
+    <text x="52" y="589" class="body">or split it into subtasks</text>
+    <text x="52" y="605" class="body">that touch different files</text>
+    <text x="52" y="641" class="body" style="font-weight:700;fill:#1f2328">→ one implementation each</text>
+  </g>
+  <path d="M250,548 H286" class="flow" marker-end="url(#ah)"/>
+  <path d="M250,580 H286" class="flow" marker-end="url(#ah)"/>
+  <path d="M250,612 H286" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="302" y="512" width="280" height="148" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+    <rect x="296" y="506" width="280" height="148" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
+    <rect x="290" y="500" width="280" height="148" rx="10" class="box"/>
+    <use href="#i-claude" x="302" y="512" width="24" height="24"/>
+    <text x="334" y="529" class="team mono">implementation</text>
+    <rect x="526" y="514" width="32" height="18" rx="9" fill="#0969da"/>
+    <text x="542.0" y="527" class="badge" text-anchor="middle">#1</text>
+    <text x="302" y="548" class="kick">ONE PER SUBTASK</text>
+    <text x="302" y="568" class="body">codes in its own git worktree, runs</text>
+    <text x="302" y="584" class="body">every gate, opens its own PR</text>
+    <rect x="302" y="596" width="122" height="40" rx="8" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="312" y="612" class="chipt" style="font-size:11px">independent</text>
+    <text x="312" y="627" class="chips" style="font-size:10.5px">→ run in parallel</text>
+    <rect x="432" y="596" width="126" height="40" rx="8" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="442" y="612" class="chipt" style="font-size:11px">depends on another</text>
+    <text x="442" y="627" class="chips" style="font-size:10.5px">→ waits its turn</text>
+  </g>
+  <path d="M582,580 H618" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="620" y="500" width="620" height="160" rx="12" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1.2"/>
+    <use href="#i-pr" x="632" y="512" width="24" height="24"/>
+    <text x="664" y="529" class="team" style="font-size:14px">Pull request on GitHub</text>
+    <text x="1228" y="529" class="chips" text-anchor="end">one per subtask, shown here for one</text>
+    <rect x="632" y="548" width="144" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+    <rect x="632" y="548" width="5" height="48" rx="2.5" fill="#57606a"/>
+    <text x="646" y="568" class="chipt">CI gate</text>
+    <text x="646" y="585" class="chips">GitHub Actions, required</text>
+    <rect x="782" y="548" width="144" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+    <rect x="782" y="548" width="5" height="48" rx="2.5" fill="#bf3989"/>
+    <text x="796" y="568" class="chipt">SonarCloud</text>
+    <text x="796" y="585" class="chips">analysis user · advisory</text>
+    <rect x="932" y="548" width="144" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+    <rect x="932" y="548" width="5" height="48" rx="2.5" fill="#0e8a6b"/>
+    <text x="946" y="568" class="chipt">Copilot review</text>
+    <text x="946" y="585" class="chips">inline comments</text>
+    <rect x="1082" y="548" width="144" height="48" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+    <rect x="1082" y="548" width="5" height="48" rx="2.5" fill="#8250df"/>
+    <text x="1096" y="568" class="chipt">Verifier bot</text>
+    <text x="1096" y="585" class="chips">posts the review</text>
+    <text x="632" y="626" class="body" style="font-size:11.5px;fill:#1f2328">Every subtask’s PR goes through the same flow from here on:</text>
+    <text x="632" y="643" class="body" style="font-size:11.5px;fill:#1f2328;font-weight:700">review → fix rounds → merge → self-update → deploy_verify.</text>
+  </g>
+  <path d="M930,660 V686 H170 V708" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="40" y="710" width="260" height="140" rx="10" class="box"/>
+    <use href="#i-claude" x="52" y="722" width="24" height="24"/>
+    <text x="84" y="739" class="team mono">verification</text>
+    <rect x="252" y="724" width="36" height="18" rx="9" fill="#8250df"/>
+    <text x="270.0" y="737" class="badge" text-anchor="middle">bot</text>
+    <text x="52" y="767" class="body">judge · diff reviewer · scenario runner</text>
+    <text x="52" y="783" class="body">check the diff against the plan, CI</text>
+    <text x="52" y="799" class="body">and Copilot, then post the review</text>
+    <text x="52" y="815" class="body">on GitHub as the verifier bot</text>
+  </g>
+  <path d="M300,760 H348" stroke="#1a7f37" stroke-width="1.8" fill="none" marker-end="url(#ahg)"/>
+  <text x="324" y="752" text-anchor="middle" class="lbl" style="fill:#1a7f37;font-size:9px">APPROVE</text>
+  <g>
+    <rect x="350" y="710" width="260" height="140" rx="10" class="box"/>
+    <use href="#i-step" x="362" y="722" width="24" height="24"/>
+    <text x="394" y="739" class="team mono">pr_merge</text>
+    <rect x="566" y="724" width="32" height="18" rx="9" fill="#0969da"/>
+    <text x="582.0" y="737" class="badge" text-anchor="middle">#1</text>
+    <text x="362" y="767" class="body">waits until gate is green, the review</text>
+    <text x="362" y="783" class="body">is approved and every thread is</text>
+    <text x="362" y="799" class="body">resolved, then</text>
+    <text x="362" y="815" class="body" style="font-weight:700;fill:#1f2328">squash-merges to main</text>
+  </g>
+  <path d="M610,760 H658" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="660" y="710" width="270" height="140" rx="10" class="box"/>
+    <use href="#i-mac" x="672" y="722" width="24" height="24"/>
+    <text x="704" y="739" class="team">Self-update</text>
+    <text x="800" y="739" class="mono" style="font-size:10.5px;fill:#656d76">ai.alan.update</text>
+    <text x="672" y="767" class="body">waits for green CI on main, pulls it</text>
+    <text x="672" y="783" class="body">to your Mac, rebuilds the UI and</text>
+    <text x="672" y="799" class="body">restarts the service when needed</text>
+  </g>
+  <path d="M930,760 H978" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="980" y="710" width="260" height="140" rx="10" class="box"/>
+    <use href="#i-step" x="992" y="722" width="24" height="24"/>
+    <text x="1024" y="739" class="team mono">deploy_verify</text>
+    <text x="992" y="767" class="body">confirms the merged change is live</text>
+    <rect x="992" y="790" width="74" height="24" rx="12" fill="#1a7f37"/>
+    <text x="1029" y="806" class="body" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">✓ Done</text>
+  </g>
+  <path d="M170,850 V888" stroke="#bc4c00" stroke-width="1.8" fill="none" marker-end="url(#ahr)"/>
+    <text x="178" y="874" class="lbl" style="fill:#bc4c00">REQUEST_CHANGES</text>
+  <path d="M480,850 V888" stroke="#bc4c00" stroke-width="1.8" fill="none" marker-end="url(#ahr)"/>
+    <text x="488" y="874" class="lbl" style="fill:#bc4c00">merge gate blocked</text>
+  <g>
+    <rect x="40" y="890" width="1200" height="204" rx="10" fill="#fff8f2" stroke="#e7a77a" stroke-width="1.2"/>
+    <text x="52" y="914" class="team">Fix loop</text>
+    <text x="116" y="914" class="secn" style="font-size:11px">each round: implementation_fix pushes to the same PR, then verification reviews it again · as many rounds as needed · a stalled loop parks and asks you</text>
+    <rect x="52" y="926" width="360" height="130" rx="10" fill="#ffffff" fill-opacity="0.55" stroke="#e7a77a" stroke-dasharray="4 3"/>
+    <text x="64" y="946" class="kick" style="fill:#bc4c00">ROUND 1</text>
+    <rect x="122" y="933" width="109.3" height="20" rx="10" fill="#ffffff" stroke="#57606a"/>
+    <circle cx="133" cy="943" r="4" fill="#57606a"/>
+    <text x="142" y="947" class="chipt" style="font-size:10.5px;fill:#57606a">Red CI checks</text>
+    <rect x="64" y="958" width="150" height="92" rx="10" class="box"/>
+    <use href="#i-claude" x="74" y="968" width="20" height="20"/>
+    <text x="100" y="983" class="mono" style="font-size:11px;font-weight:700">implementation_fix</text>
+    <rect x="174" y="1028" width="32" height="18" rx="9" fill="#0969da"/>
+    <text x="190.0" y="1041" class="badge" text-anchor="middle">#1</text>
+    <text x="74" y="1004" class="chips" style="font-size:10.5px">fixes the failing test</text>
+    <text x="74" y="1019" class="chips" style="font-size:10.5px">pushes to the same PR</text>
+  <path d="M214,1004 H248" stroke="#57606a" stroke-width="1.6" fill="none" marker-end="url(#ah)"/>
+    <rect x="250" y="958" width="150" height="92" rx="10" class="box"/>
+    <use href="#i-claude" x="260" y="968" width="20" height="20"/>
+    <text x="286" y="983" class="mono" style="font-size:11px;font-weight:700">verification</text>
+    <rect x="356" y="1028" width="36" height="18" rx="9" fill="#8250df"/>
+    <text x="374.0" y="1041" class="badge" text-anchor="middle">bot</text>
+    <text x="260" y="1004" class="chipt" style="font-size:10.5px;fill:#cf222e">✗ requests changes</text>
+  <path d="M412,991 H458" stroke="#bc4c00" stroke-width="1.8" fill="none" marker-end="url(#ahr)"/>
+    <rect x="460" y="926" width="360" height="130" rx="10" fill="#ffffff" fill-opacity="0.55" stroke="#e7a77a" stroke-dasharray="4 3"/>
+    <text x="472" y="946" class="kick" style="fill:#bc4c00">ROUND 2</text>
+    <rect x="530" y="933" width="133.7" height="20" rx="10" fill="#ffffff" stroke="#8250df"/>
+    <circle cx="541" cy="943" r="4" fill="#8250df"/>
+    <text x="550" y="947" class="chipt" style="font-size:10.5px;fill:#8250df">Verifier findings</text>
+    <rect x="472" y="958" width="150" height="92" rx="10" class="box"/>
+    <use href="#i-claude" x="482" y="968" width="20" height="20"/>
+    <text x="508" y="983" class="mono" style="font-size:11px;font-weight:700">implementation_fix</text>
+    <rect x="582" y="1028" width="32" height="18" rx="9" fill="#0969da"/>
+    <text x="598.0" y="1041" class="badge" text-anchor="middle">#1</text>
+    <text x="482" y="1004" class="chips" style="font-size:10.5px">adds the missing case</text>
+    <text x="482" y="1019" class="chips" style="font-size:10.5px">pushes to the same PR</text>
+  <path d="M622,1004 H656" stroke="#57606a" stroke-width="1.6" fill="none" marker-end="url(#ah)"/>
+    <rect x="658" y="958" width="150" height="92" rx="10" class="box"/>
+    <use href="#i-claude" x="668" y="968" width="20" height="20"/>
+    <text x="694" y="983" class="mono" style="font-size:11px;font-weight:700">verification</text>
+    <rect x="764" y="1028" width="36" height="18" rx="9" fill="#8250df"/>
+    <text x="782.0" y="1041" class="badge" text-anchor="middle">bot</text>
+    <text x="668" y="1004" class="chipt" style="font-size:10.5px;fill:#1a7f37">✓ approves</text>
+    <text x="668" y="1019" class="chipt" style="font-size:10.5px;fill:#cf222e">✗ merge gate: Copilot</text>
+  <path d="M820,991 H866" stroke="#bc4c00" stroke-width="1.8" fill="none" marker-end="url(#ahr)"/>
+    <rect x="868" y="926" width="360" height="130" rx="10" fill="#ffffff" fill-opacity="0.55" stroke="#e7a77a" stroke-dasharray="4 3"/>
+    <text x="880" y="946" class="kick" style="fill:#bc4c00">ROUND 3</text>
+    <rect x="938" y="933" width="127.6" height="20" rx="10" fill="#ffffff" stroke="#0e8a6b"/>
+    <circle cx="949" cy="943" r="4" fill="#0e8a6b"/>
+    <text x="958" y="947" class="chipt" style="font-size:10.5px;fill:#0e8a6b">Copilot comments</text>
+    <rect x="880" y="958" width="150" height="92" rx="10" class="box"/>
+    <use href="#i-claude" x="890" y="968" width="20" height="20"/>
+    <text x="916" y="983" class="mono" style="font-size:11px;font-weight:700">implementation_fix</text>
+    <rect x="990" y="1028" width="32" height="18" rx="9" fill="#0969da"/>
+    <text x="1006.0" y="1041" class="badge" text-anchor="middle">#1</text>
+    <text x="890" y="1004" class="chips" style="font-size:10.5px">answers and resolves them</text>
+    <text x="890" y="1019" class="chips" style="font-size:10.5px">pushes to the same PR</text>
+  <path d="M1030,1004 H1064" stroke="#57606a" stroke-width="1.6" fill="none" marker-end="url(#ah)"/>
+    <rect x="1066" y="958" width="150" height="92" rx="10" class="box"/>
+    <use href="#i-claude" x="1076" y="968" width="20" height="20"/>
+    <text x="1102" y="983" class="mono" style="font-size:11px;font-weight:700">verification</text>
+    <rect x="1172" y="1028" width="36" height="18" rx="9" fill="#8250df"/>
+    <text x="1190.0" y="1041" class="badge" text-anchor="middle">bot</text>
+    <text x="1076" y="1004" class="chipt" style="font-size:10.5px;fill:#1a7f37">✓ approves</text>
+    <text x="52" y="1080" class="kick">WHAT SENDS A PR BACK</text>
+    <rect x="212" y="1067" width="133.1" height="22" rx="11" fill="#ffffff" stroke="#d0d7de"/>
+    <circle cx="223" cy="1078" r="4" fill="#8250df"/>
+    <text x="232" y="1082" class="chipt" style="font-size:10.5px">Verifier findings</text>
+    <rect x="353.1" y="1067" width="126.8" height="22" rx="11" fill="#ffffff" stroke="#d0d7de"/>
+    <circle cx="364.1" cy="1078" r="4" fill="#0e8a6b"/>
+    <text x="373.1" y="1082" class="chipt" style="font-size:10.5px">Copilot comments</text>
+    <rect x="487.90000000000003" y="1067" width="107.89999999999999" height="22" rx="11" fill="#ffffff" stroke="#d0d7de"/>
+    <circle cx="498.90000000000003" cy="1078" r="4" fill="#57606a"/>
+    <text x="507.90000000000003" y="1082" class="chipt" style="font-size:10.5px">Red CI checks</text>
+    <rect x="603.8000000000001" y="1067" width="202.4" height="22" rx="11" fill="#ffffff" stroke="#d0d7de"/>
+    <circle cx="614.8000000000001" cy="1078" r="4" fill="#bc4c00"/>
+    <text x="623.8000000000001" y="1082" class="chipt" style="font-size:10.5px">Merge conflict / behind main</text>
+    <rect x="814.2" y="1067" width="215.0" height="22" rx="11" fill="#ffffff" stroke="#d0d7de"/>
+    <circle cx="825.2" cy="1078" r="4" fill="#bf3989"/>
+    <text x="834.2" y="1082" class="chipt" style="font-size:10.5px">SonarCloud findings (advisory)</text>
+  </g>
+  <!-- ③ explore flow -->
+  <text x="40" y="1136" class="sec">③ Explore flow</text>
+  <text x="160" y="1136" class="secn">read-only · researches and reasons about your repo and the web, opens no PR</text>
+  <g>
+    <rect x="40" y="1150" width="170" height="140" rx="10" fill="#ddf4ff" stroke="#54aeff" stroke-width="1.2"/>
+    <use href="#i-owner" x="52" y="1162" width="24" height="24"/>
+    <text x="84" y="1179" class="team">Explore chat</text>
+    <text x="52" y="1207" class="body">You pick a consultant</text>
+    <text x="52" y="1223" class="body">and talk the question</text>
+    <text x="52" y="1239" class="body">through with it</text>
+  </g>
+  <path d="M210,1210 H248" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="250" y="1150" width="170" height="140" rx="10" fill="#ddf4ff" stroke="#54aeff" stroke-width="1.2"/>
+    <use href="#i-doc" x="262" y="1162" width="24" height="24"/>
+    <text x="294" y="1179" class="team">Brief</text>
+    <text x="262" y="1207" class="body">Summarize → you</text>
+    <text x="262" y="1223" class="body">review and edit the</text>
+    <text x="262" y="1239" class="body">brief, then</text>
+    <text x="262" y="1255" class="body" style="font-weight:700;fill:#1f2328">click Dispatch</text>
+  </g>
+  <path d="M420,1210 H458" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="460" y="1150" width="170" height="140" rx="10" class="box"/>
+    <use href="#i-claude" x="472" y="1162" width="24" height="24"/>
+    <text x="504" y="1179" class="team mono" style="font-size:12px">brief_refine</text>
+    <text x="472" y="1207" class="body">first agent after</text>
+    <text x="472" y="1223" class="body">Dispatch, automatic:</text>
+    <text x="472" y="1239" class="body">requirements vs</text>
+    <text x="472" y="1255" class="body">assumptions</text>
+  </g>
+  <path d="M630,1210 H668" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="670" y="1150" width="370" height="140" rx="10" class="box"/>
+    <use href="#i-claude" x="682" y="1162" width="24" height="24"/>
+    <text x="714" y="1179" class="team">One consultant team</text>
+    <text x="852" y="1179" class="chips">the one you chatted with</text>
+    <rect x="682" y="1192" width="76" height="22" rx="11.0" fill="#fbefe9" stroke="#e7b9a3"/>
+    <text x="720.0" y="1207" class="mono" text-anchor="middle" style="font-size:11px">research</text>
+    <rect x="766" y="1192" width="106" height="22" rx="11.0" fill="#fbefe9" stroke="#e7b9a3"/>
+    <text x="819.0" y="1207" class="mono" text-anchor="middle" style="font-size:11px">brainstorming</text>
+    <rect x="880" y="1192" width="96" height="22" rx="11.0" fill="#fbefe9" stroke="#e7b9a3"/>
+    <text x="928.0" y="1207" class="mono" text-anchor="middle" style="font-size:11px">architecture</text>
+    <rect x="682" y="1222" width="134" height="22" rx="11.0" fill="#fbefe9" stroke="#e7b9a3"/>
+    <text x="749.0" y="1237" class="mono" text-anchor="middle" style="font-size:11px">opportunity_scout</text>
+    <rect x="824" y="1222" width="82" height="22" rx="11.0" fill="#fbefe9" stroke="#e7b9a3"/>
+    <text x="865.0" y="1237" class="mono" text-anchor="middle" style="font-size:11px">ui_review</text>
+    <rect x="682" y="1256" width="74" height="24" rx="6" fill="#ffffff" stroke="#e7b9a3"/>
+    <text x="719.0" y="1272" class="body" text-anchor="middle" style="font-size:10.5px;fill:#1f2328">orchestrator</text>
+    <path d="M756,1268 H768" class="flow" style="stroke-width:1.4" marker-end="url(#ah)"/>
+    <rect x="774" y="1260" width="52" height="24" rx="6" fill="#fbefe9" stroke="#e7b9a3"/>
+    <rect x="770" y="1256" width="52" height="24" rx="6" fill="#ffffff" stroke="#e7b9a3"/>
+    <text x="796.0" y="1272" class="body" text-anchor="middle" style="font-size:10.5px;fill:#1f2328">workers</text>
+    <path d="M826,1268 H834" class="flow" style="stroke-width:1.4" marker-end="url(#ah)"/>
+    <rect x="836" y="1256" width="52" height="24" rx="6" fill="#ffffff" stroke="#e7b9a3"/>
+    <text x="862.0" y="1272" class="body" text-anchor="middle" style="font-size:10.5px;fill:#1f2328">verifier</text>
+    <path d="M888,1268 H900" class="flow" style="stroke-width:1.4" marker-end="url(#ah)"/>
+    <rect x="902" y="1256" width="70" height="24" rx="6" fill="#ffffff" stroke="#e7b9a3"/>
+    <text x="937.0" y="1272" class="body" text-anchor="middle" style="font-size:10.5px;fill:#1f2328">synthesizer</text>
+  </g>
+  <path d="M1040,1210 H1078" class="flow" marker-end="url(#ah)"/>
+  <g>
+    <rect x="1080" y="1150" width="160" height="140" rx="10" fill="#dafbe1" stroke="#4ac26b" stroke-width="1.2"/>
+    <text x="1092" y="1179" class="team">Report</text>
+    <text x="1092" y="1207" class="body">findings and a</text>
+    <text x="1092" y="1223" class="body">recommendation</text>
+    <text x="1092" y="1239" class="body">in the web UI</text>
+    <text x="1092" y="1261" class="body" style="font-weight:700;fill:#1a7f37">→ can hand off to</text>
+    <text x="1092" y="1277" class="mono" style="font-size:10.5px;font-weight:700;fill:#1a7f37">implementation_plan</text>
+  </g>
+  <!-- legend -->
+  <path d="M40,1316 H1240" stroke="#d8dee4"/>
+    <use href="#i-claude" x="40" y="1332" width="18" height="18"/>
+    <text x="64" y="1345" class="body">Claude Code agent team</text>
+    <use href="#i-step" x="214" y="1332" width="18" height="18"/>
+    <text x="238" y="1345" class="body">Alan step, no model</text>
+  <rect x="370" y="1332" width="28" height="17" rx="8.5" fill="#0969da"/>
+    <text x="384" y="1344" class="badge" text-anchor="middle">#1</text>
+    <text x="406" y="1345" class="body">acts as your GitHub account</text>
+  <rect x="584" y="1332" width="32" height="17" rx="8.5" fill="#8250df"/>
+    <text x="600" y="1344" class="badge" text-anchor="middle">bot</text>
+    <text x="624" y="1345" class="body">acts as the verifier bot</text>
+  <path d="M790,1340 H820" stroke="#bc4c00" stroke-width="1.8" marker-end="url(#ahr)"/>
+    <text x="828" y="1345" class="body">fix loop</text>
+    <text x="40" y="1376" class="body" style="font-size:11px">Posture “autonomous” merges without human review once gate is green; lower it to “propose” in the web UI to approve each merge yourself. SonarCloud is optional and never blocks a merge.</text>
+</svg>
