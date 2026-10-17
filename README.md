@@ -4,6 +4,18 @@
 
 alan-factory is an autonomous multi-agent engineering system. It is a single-process FastAPI service with a React UI. Headless `claude` workers plan, implement, verify, review and merge pull requests against your own repository.
 
+## How it works
+
+You set up a Mac, two GitHub accounts, Claude Code and, optionally, SonarCloud once. After that there are two ways in: **Build** turns a chat into reviewed, merged and deployed pull requests, and **Explore** researches and reasons about a question without changing code.
+
+![How alan-factory works: what you set up once, the build flow from a chat to merged, deployed pull requests, and the read-only explore flow](docs/images/architecture.svg)
+
+### Example: adding centralized logging
+
+Research picks the log storage provider, architecture designs the setup on it, and you record both decisions in the project doc that every agent in the project reads. You then deliver the change list either through one Build chat per item, or by writing it as a roadmap file in your repository and running a driver in a Claude Code `/loop` that hands each item to alan-factory as a build and moves on once its pull request is merged.
+
+![Example: research a log storage provider, design the architecture, then deliver it through several build chats or a roadmap file worked through by a Claude Code loop driver](docs/images/usage-example.svg)
+
 ## Getting started
 
 ### Before you start
