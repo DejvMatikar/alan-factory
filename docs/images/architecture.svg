@@ -281,7 +281,7 @@
   <g>
     <rect x="40" y="890" width="1200" height="204" rx="10" fill="#fff8f2" stroke="#e7a77a" stroke-width="1.2"/>
     <text x="52" y="914" class="team">Fix loop</text>
-    <text x="116" y="914" class="secn" style="font-size:11px">each round: implementation_fix pushes to the same PR, then verification reviews it again · as many rounds as needed · a stalled loop parks and asks you</text>
+    <text x="116" y="914" class="secn" style="font-size:11px">each round: implementation_fix pushes to the same PR, then verification reviews it again · capped at a few rounds · Alan escalates to you at the cap, or sooner if the loop stalls</text>
     <rect x="52" y="926" width="360" height="130" rx="10" fill="#ffffff" fill-opacity="0.55" stroke="#e7a77a" stroke-dasharray="4 3"/>
     <text x="64" y="946" class="kick" style="fill:#bc4c00">ROUND 1</text>
     <rect x="122" y="933" width="109.3" height="20" rx="10" fill="#ffffff" stroke="#57606a"/>
